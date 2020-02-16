@@ -37,14 +37,11 @@ function Login(props) {
     const handleSubmit = (event) => {
         event.preventDefault();
         login().then((res) => {
-            console.log(res)
-            const cookies = new Cookie();
-
             if (res.error) {
-                console.log("Error logging in: ")
-                console.log(res.error)
+                //Loop through res.error.GraphQLErrors
                 return;
             }
+            const cookies = new Cookie();
             cookies.set('token', res.data.login.token)
             const old_loc = props.location.state.from.pathname
 
@@ -61,10 +58,6 @@ function Login(props) {
             [name]: value
         })
     };
-
-    console.log(loading);
-    console.log(error);
-    console.log(data);
 
     return redirect ? (<Redirect to={{pathname: url ? url : '/'}}/>) : (
         <form onSubmit={handleSubmit}>

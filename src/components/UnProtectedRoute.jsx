@@ -15,7 +15,6 @@ function UnProtectedRoute({component: Component, ...rest}) {
         <Route
             {...rest}
             render={props => {
-                console.log(props)
                 if (!authenticated) {
                     return <Component {...props} />;
                 } else {

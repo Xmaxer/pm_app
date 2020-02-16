@@ -10,13 +10,9 @@ function useAuthenticated() {
     const [authenticated, setAuthenticated] = useState(null);
     const [check, { loading, error, data }] = useManualQuery(IS_AUTHENTICATED_QUERY);
 
-    console.log("Triggering");
-
     useEffect(() => {
-        console.log("Calling function");
         let cancel = false;
         check().then((response) => {
-            console.log("GOT RESPONSE FROM IS AUTH")
             if(!cancel) {
                 response.error ? setAuthenticated(false) : setAuthenticated(response.data.isAuthenticated)
             }
