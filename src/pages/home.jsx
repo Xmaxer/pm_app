@@ -3,7 +3,7 @@ import {makeStyles} from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({}));
 
-function home() {
+function Home() {
     return (
         <div>
             Home
@@ -11,4 +11,4 @@ function home() {
     );
 }
 
-export default home;
+export default Home;

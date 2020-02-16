@@ -1,5 +1,6 @@
 
 const initialState = {
-    loggedIn: false
+    loggedIn: false,
+    loading: false
 };
 export default initialState;

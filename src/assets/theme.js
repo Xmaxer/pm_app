@@ -19,7 +19,14 @@ const generatedPalette = createMuiTheme({
 
 const theme = createMuiTheme({
     ...generatedPalette,
-    spacing: 5
+    spacing: 5,
+    props: {
+        MuiGrid: {
+            container: {
+                backgroundColor: generatedPalette.palette.secondary.main
+            }
+        }
+    }
 });
 
 export default theme;

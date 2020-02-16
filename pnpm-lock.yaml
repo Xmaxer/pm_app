@@ -5,10 +5,12 @@ dependencies:
   '@testing-library/jest-dom': 5.1.1
   '@testing-library/react': 9.4.0_react-dom@16.12.0+react@16.12.0
   '@testing-library/user-event': 8.1.0
+  graphql-hooks: 4.4.2_react@16.12.0
   react: 16.12.0
   react-dom: 16.12.0_react@16.12.0
   react-router-dom: 5.1.2_react@16.12.0
   react-scripts: 3.4.0
+  universal-cookie: 4.0.3
 devDependencies:
   cross-env: 7.0.0
 lockfileVersion: 5.1
@@ -1572,6 +1574,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-rr+OQyAjxze7GgWrSaJwydHStIhHq2lvY3BOC2Mj7KnzI7XK0Uw1TOOdI9lDoajEbSWLiYgoo4f1R51erQfhPQ==
+  /@types/cookie/0.3.3:
+    dev: false
+    resolution:
+      integrity: sha512-LKVP3cgXBT9RYj+t+9FDKwS5tdI+rPBXaNSkma7hvqy35lc7mAokC2zsqWJH0LaqIt3B962nuYI77hsJoT1gow==
   /@types/eslint-visitor-keys/1.0.0:
     dev: false
     resolution:
@@ -1624,6 +1630,10 @@ packages:
     dev: false
     resolution:
       integrity: sha512-Zq8gcQGmn4txQEJeiXo/KiLpon8TzAl0kmKH4zdWctPj05nWwp1ClMdAVEloqrQKfaC48PNLdgN/aVaLqUrluA==
+  /@types/object-assign/4.0.30:
+    dev: false
+    resolution:
+      integrity: sha1-iUk3HVqZ9Dge4PHfCpt6GH4H5lI=
   /@types/parse-json/4.0.0:
     dev: false
     resolution:
@@ -3763,6 +3773,12 @@ packages:
       node: '>= 0.6'
     resolution:
       integrity: sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=
+  /dequal/1.0.0:
+    dev: false
+    engines:
+      node: '>=6'
+    resolution:
+      integrity: sha512-/Nd1EQbQbI9UbSHrMiKZjFLrXSnU328iQdZKPQf78XQI6C+gutkFUeoHpG5J08Ioa6HeRbRNFpSIclh1xyG0mw==
   /des.js/1.0.1:
     dependencies:
       inherits: 2.0.4
@@ -4554,6 +4570,12 @@ packages:
       node: '>=0.10.0'
     resolution:
       integrity: sha512-Nmb6QXkELsuBr24CJSkilo6UHHgbekK5UiZgfE6UHD3Eb27YC6oD+bhcT+tJ6cl8dmsgdQxnWlcry8ksBIBLpw==
+  /extract-files/7.0.0:
+    dev: false
+    engines:
+      node: '>=10'
+    resolution:
+      integrity: sha512-3AUlT7TD+DbQXNe3t70QrgJU6Wgcp7rk1Zm0vqWz8OYnw4vxihgG0TgZ2SIGrVqScc4WfOu7B4a0BezGJ0YqvQ==
   /extsprintf/1.3.0:
     dev: false
     engines:
@@ -5070,6 +5092,16 @@ packages:
     dev: false
     resolution:
       integrity: sha512-a30VEBm4PEdx1dRB7MFK7BejejvCvBronbLjht+sHuGYj8PHs7M/5Z+rt5lw551vZ7yfTCj4Vuyy3mSJytDWRQ==
+  /graphql-hooks/4.4.2_react@16.12.0:
+    dependencies:
+      dequal: 1.0.0
+      extract-files: 7.0.0
+      react: 16.12.0
+    dev: false
+    peerDependencies:
+      react: ^16.12.0
+    resolution:
+      integrity: sha512-uMaE5i9ZH4NO/NSs3e+3W/LvR31hWbqoXf+D/b6NUj3B7M2J8DFrrT2fgwq67Aflrmt6rvr8zQl5OVUgHxzG9Q==
   /growly/1.3.0:
     dev: false
     resolution:
@@ -10819,6 +10851,15 @@ packages:
     dev: false
     resolution:
       integrity: sha512-zoWr9ObaxALD3DOPfjPSqxt4fnZiWblxHIgeWqW8x7UqDzEtHEQLzji2cuJYQFCU6KmoJikOYAZlrTHHebjx2w==
+  /universal-cookie/4.0.3:
+    dependencies:
+      '@types/cookie': 0.3.3
+      '@types/object-assign': 4.0.30
+      cookie: 0.4.0
+      object-assign: 4.1.1
+    dev: false
+    resolution:
+      integrity: sha512-YbEHRs7bYOBTIWedTR9koVEe2mXrq+xdjTJZcoKJK/pQaE6ni28ak2AKXFpevb+X6w3iU5SXzWDiJkmpDRb9qw==
   /universalify/0.1.2:
     dev: false
     engines:
@@ -11504,7 +11545,9 @@ specifiers:
   '@testing-library/react': 9.4.0
   '@testing-library/user-event': 8.1.0
   cross-env: 7.0.0
+  graphql-hooks: 4.4.2
   react: 16.12.0
   react-dom: 16.12.0
   react-router-dom: 5.1.2
   react-scripts: 3.4.0
+  universal-cookie: 4.0.3
