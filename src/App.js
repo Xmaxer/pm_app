@@ -1,25 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import {ThemeProvider} from '@material-ui/styles';
+import theme from "./assets/theme";
+import {StateProvider} from "./state/state";
+import initialState from "./state/initialState";
+import rootReducer from "./state/reducers/rootReducer";
+import {BrowserRouter, Switch, Route} from 'react-router-dom'
+import home from "./pages/home";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <ThemeProvider theme={theme}>
+        <StateProvider initialState={initialState} reducer={rootReducer}>
+          <BrowserRouter>
+            <Switch>
+              <Route path={"/"} component={home} exact/>
+            </Switch>
+          </BrowserRouter>
+        </StateProvider>
+      </ThemeProvider>
   );
 }
 
