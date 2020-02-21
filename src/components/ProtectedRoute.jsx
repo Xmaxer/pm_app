@@ -10,7 +10,9 @@ function ProtectedRoute({component: Component, ...rest}) {
 
     const [{loggedIn}, dispatch] = useGlobalState();
     const authenticated = useAuthenticated();
-    if (authenticated == null) { return (<h1>LOADING</h1>)}
+    if (authenticated == null || authenticated === false) {
+        return (<h1>LOADING</h1>)
+    }
     return (
         <Route
             {...rest}

@@ -7,9 +7,10 @@ import rootReducer from "./state/reducers/rootReducer";
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 import home from "./pages/home";
 import ProtectedRoute from "./components/ProtectedRoute";
-import login from "./pages/login";
+import Login from "./pages/login";
 import {ClientContext, GraphQLClient} from 'graphql-hooks'
 import UnProtectedRoute from "./components/UnProtectedRoute";
+import Register from "./pages/register";
 
 const client = new GraphQLClient({
     url: 'http://localhost:3005/api'
@@ -22,8 +23,9 @@ function App() {
                 <StateProvider initialState={initialState} reducer={rootReducer}>
                     <BrowserRouter>
                         <Switch>
-                            <ProtectedRoute path={"/"} component={home} exact/>
-                            <UnProtectedRoute path={"/login"} component={login}/>
+                            <ProtectedRoute path={["/", "/dashboard"]} component={home} exact/>
+                            <UnProtectedRoute path={"/login"} component={Login}/>
+                            <UnProtectedRoute path={"/register"} component={Register}/>
                             <Route path={"*"} component={() => "404"}/>
                         </Switch>
                     </BrowserRouter>

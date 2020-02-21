@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {Button, Grid, TextField, Typography} from '@material-ui/core';
 import {useMutation} from 'graphql-hooks'
-import {LOGIN_MUTATION} from "../assets/queries";
+import {REGISTER_MUTATION} from "../assets/queries";
 import Cookie from 'universal-cookie'
 import {Redirect} from 'react-router-dom'
 
@@ -28,11 +28,11 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Login(props) {
+function Register(props) {
     const classes = useStyles();
     const [form, setForm] = useState({});
     const [{redirect, url}, setRedirect] = useState({redirect: false, url: null});
-    const [login, {loading, error, data}] = useMutation(LOGIN_MUTATION, {
+    const [register, {loading, error, data}] = useMutation(REGISTER_MUTATION, {
         variables: {
             ...form
         }
@@ -40,13 +40,15 @@ function Login(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        login().then((res) => {
+        register().then((res) => {
             if (res.error) {
                 //Loop through res.error.GraphQLErrors
+                console.log("ERROR:");
+                console.log(res);
                 return;
             }
             const cookies = new Cookie();
-            cookies.set('token', res.data.login.token);
+            cookies.set('token', res.data.register.token);
             const old_loc = props.location.state ? props.location.state.from.pathname : null;
 
             setRedirect({redirect: true, url: old_loc})
@@ -69,7 +71,7 @@ function Login(props) {
 
                 <Grid container spacing={5} direction={'column'} alignItems={'center'} justify={'center'}>
                     <Grid item xs={12} className={classes.item}>
-                        <Typography variant={'h4'}>Login</Typography>
+                        <Typography variant={'h4'}>Register</Typography>
                     </Grid>
 
                     <Grid item xs={12} className={classes.item}>
@@ -80,22 +82,32 @@ function Login(props) {
                         <TextField type={'password'} required={true} placeholder={'Password'}
                                    className={classes.textfield} name={"password"} onInput={handleChange}/>
                     </Grid>
+                    <Grid item xs={12} className={classes.item}>
+                        <TextField type={'password'} required={true} placeholder={'Confirm Password'}
+                                   className={classes.textfield} name={"password_confirmation"} onInput={handleChange}/>
+                    </Grid>
+                    <Grid item xs={12} className={classes.item}>
+                        <TextField type={'text'} required={true} placeholder={'First name'}
+                                   className={classes.textfield} name={"first_name"} onInput={handleChange}/>
+                    </Grid>
+                    <Grid item xs={12} className={classes.item}>
+                        <TextField type={'text'} required={true} placeholder={'Last name'}
+                                   className={classes.textfield} name={"last_name"} onInput={handleChange}/>
+                    </Grid>
+                    <Grid item xs={12} className={classes.item}>
+                        <TextField type={'text'} required={true} placeholder={'Phone number'}
+                                   className={classes.textfield} name={"phone_number"} onInput={handleChange}/>
+                    </Grid>
                     <Grid item xs={12}>
                         <Button variant={"contained"} color={"primary"} className={classes.button} type={'submit'}
                                 disabled={loading}>
-                            Login
+                            Register
                         </Button>
                     </Grid>
                     <Grid container item direction={"row"} xs={12}>
-                        <Grid item xs={6}>
-                            <Button variant={"contained"} color={"primary"} className={classes.button}
-                                    href={"/register"}>
-                                Register
-                            </Button>
-                        </Grid>
-                        <Grid item xs={6}>
-                            <Button variant={"contained"} color={"primary"} className={classes.button}>
-                                Forgot Password
+                        <Grid item xs={12}>
+                            <Button variant={"contained"} color={"primary"} className={classes.button} href={"/login"}>
+                                Already registered? Login
                             </Button>
                         </Grid>
                     </Grid>
@@ -106,4 +118,4 @@ function Login(props) {
     );
 }
 
-export default Login;
+export default Register;

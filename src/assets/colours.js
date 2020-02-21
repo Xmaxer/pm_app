@@ -2,11 +2,12 @@
 const palette = {
     primary: '#949494',
     secondary: '#93b7b2',
+    tertiary: '#f3f3f3',
     error: '#72195A'
 };
 
 const pallete2 = {
     primary: '#4C5760',
     secondary: '#4C5760'
-}
+};
 export default palette;
