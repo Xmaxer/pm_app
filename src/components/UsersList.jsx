@@ -1,10 +1,11 @@
 import React from 'react';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
-import {IconButton, Table, TableBody, TableCell, TableHead, TableRow, Typography} from '@material-ui/core'
+import {Chip, IconButton, Table, TableBody, TableCell, TableHead, TableRow, Typography} from '@material-ui/core'
 import {useQuery} from 'graphql-hooks'
-import {COMPANIES_QUERY} from "../assets/queries";
+import {COMPANY_USERS_QUERY} from "../assets/queries";
 import DeleteIcon from '@material-ui/icons/Delete';
 import SettingsIcon from '@material-ui/icons/Build';
+import {Redirect} from 'react-router-dom'
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -47,25 +48,29 @@ const StyledTableRow = withStyles(theme => ({
     },
 }))(TableRow);
 
-function CompaniesList({summary = true}) {
+function UsersList({summary = true, company_id}) {
     const classes = useStyles();
 
-    const {loading, error, data} = useQuery(COMPANIES_QUERY, {
+    const {loading, data, error} = useQuery(COMPANY_USERS_QUERY, {
         variables: {
-            first: 10
+            companyId: company_id
         }
     });
 
+    if (loading) return <h1>Loading</h1>;
+    if (error) return <h1>Errors</h1>;
+    if (data.company === null) return <Redirect to={'/dashboard'}/>;
+
     return (
         <div className={classes.container}>
-            <Typography variant={'h4'} className={classes.title}>Companies</Typography>
+            <Typography variant={'h4'} className={classes.title}>Users</Typography>
             <Table>
                 <TableHead>
                     <TableRow>
-                        <StyledTableCell>Company Name</StyledTableCell>
-                        <StyledTableCell>Number of Assets</StyledTableCell>
-                        <StyledTableCell>Data</StyledTableCell>
-                        <StyledTableCell>Avg Accuracy</StyledTableCell>
+                        <StyledTableCell>First Name</StyledTableCell>
+                        <StyledTableCell>Last Name</StyledTableCell>
+                        <StyledTableCell>Added on</StyledTableCell>
+                        <StyledTableCell>Role</StyledTableCell>
                         {
                             summary ? null : <StyledTableCell>Actions</StyledTableCell>
                         }
@@ -73,23 +78,31 @@ function CompaniesList({summary = true}) {
                 </TableHead>
                 <TableBody>
                     {
-                        loading ? "Loading" : data.companies ? data.companies.map(company => (
-                            <StyledTableRow key={company.id}>
-                                <StyledTableCell>{company.name}</StyledTableCell>
-                                <StyledTableCell>{company.numberOfAssets}</StyledTableCell>
-                                <StyledTableCell>1.0gb</StyledTableCell>
-                                <StyledTableCell>50%</StyledTableCell>
+                        data.company.users ? data.company.users.map(user => (
+                            <StyledTableRow key={user.id}>
+                                <StyledTableCell>{user.firstName}</StyledTableCell>
+                                <StyledTableCell>{user.lastName}</StyledTableCell>
+                                <StyledTableCell>TO BE ADDED</StyledTableCell>
+                                <StyledTableCell>{user.roles.map(role => (
+                                    <div style={{display: 'flex'}}>
+                                        {
+                                            role.name === null ?
+                                                <Chip label={"Owner"} style={{backgroundColor: "red"}}/> :
+                                                <Chip label={role.name} style={{backgroundColor: role.colour}}/>
+                                        }
+
+                                    </div>
+                                ))}</StyledTableCell>
                                 {
                                     summary ? null : <StyledTableCell>
                                         <IconButton className={classes.action}>
                                             <DeleteIcon/>
                                         </IconButton>
-                                        <IconButton href={'/dashboard/company/' + company.id}
-                                                    className={classes.action}><SettingsIcon/></IconButton>
+                                        <IconButton className={classes.action}><SettingsIcon/></IconButton>
                                     </StyledTableCell>
                                 }
                             </StyledTableRow>
-                        )) : "No companies to show!"
+                        )) : "No assets to show!"
                     }
                 </TableBody>
             </Table>
@@ -97,4 +110,4 @@ function CompaniesList({summary = true}) {
     );
 }
 
-export default CompaniesList;
+export default UsersList;

@@ -31,4 +31,40 @@ export const API_KEYS_QUERY = `query ApiKeys($first: Int, $skip: Int, $order: Ap
 }
 `;
 
+export const LOGOUT_MUTATION = `mutation {
+  logout(input:{}){
+    success
+  }
+}
+`;
+
+export const COMPANY_ASSETS_QUERY = `query Company($companyId: ID!){
+  company(companyId: $companyId){
+    assets {
+      id
+      name
+      description
+    }
+  }
+}
+`;
+
+export const COMPANY_USERS_QUERY = `query Company($companyId: ID!)
+{
+    company(companyId: $companyId) {
+    
+    users {
+      id
+      firstName
+      lastName
+      roles{
+        name
+        colour
+        id
+      }
+    }
+  }
+}
+`;
+
 export const IS_AUTHENTICATED_QUERY = `query {isAuthenticated}`;

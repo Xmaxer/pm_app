@@ -1,11 +1,9 @@
-import {LOGIN_ACTION, LOGOUT_ACTION} from "../actions";
+import {SET_LOGIN} from "../actions";
 
 export const authenticationReducer = (state, action) => {
-    switch(action.type) {
-        case LOGIN_ACTION:
-            return {...state, loggedIn: true};
-        case LOGOUT_ACTION:
-            return {...state, loggedIn: false};
+    switch (action.type) {
+        case SET_LOGIN:
+            return action.authenticated;
         default:
             return state;
     }

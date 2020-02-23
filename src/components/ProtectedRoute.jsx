@@ -1,30 +1,37 @@
 import React, {Component} from 'react';
-import {makeStyles} from '@material-ui/core/styles';
-import {useGlobalState} from "../state/state";
 import {Redirect, Route} from 'react-router-dom'
-import useAuthenticated from "./Auth";
+import useAuthenticated from "../hooks/useAuthenticated";
+import SideBar from "./SideBar";
+import {makeStyles} from '@material-ui/core/styles';
 
-const useStyles = makeStyles(theme => ({}));
+const useStyles = makeStyles(theme => ({
+    root: {
+        display: 'flex',
+    }
+}));
 
 function ProtectedRoute({component: Component, ...rest}) {
-
-    const [{loggedIn}, dispatch] = useGlobalState();
+    const classes = useStyles();
     const authenticated = useAuthenticated();
-    if (authenticated == null || authenticated === false) {
-        return (<h1>LOADING</h1>)
+
+    if (authenticated === null) {
+        return (<h1>LOADING SECURE</h1>)
     }
     return (
         <Route
             {...rest}
             render={props => {
                 if (authenticated) {
-                    return <Component {...props} />;
+                    return <div className={classes.root}>
+                        <SideBar {...props}/>
+                        <Component {...props} />
+                    </div>;
                 } else {
                     return <Redirect to={{pathname: '/login', state: {from: props.location}}}/>
                 }
             }}
         />
-       );
+    );
 }
 
 export default ProtectedRoute;

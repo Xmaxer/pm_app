@@ -1,11 +1,9 @@
-import {START_LOADING_ACTION, STOP_LOADING_ACTION} from "../actions";
+import {SET_LOADING} from "../actions";
 
 export const loadingReducer = (state, action) => {
-    switch(action.type) {
-        case START_LOADING_ACTION:
-            return {...state, loading: true};
-        case STOP_LOADING_ACTION:
-            return {...state, loading: false};
+    switch (action.type) {
+        case SET_LOADING:
+            return action.loading;
         default:
             return state;
     }

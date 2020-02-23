@@ -8,20 +8,20 @@ function useAuthenticated() {
     const client = useContext(ClientContext);
     client.setHeader('Authorization', 'Basic ' + cookies.get('token'));
     const [authenticated, setAuthenticated] = useState(null);
-    const [check, { loading, error, data }] = useManualQuery(IS_AUTHENTICATED_QUERY);
+    const [check, {loading, error, data}] = useManualQuery(IS_AUTHENTICATED_QUERY);
 
     useEffect(() => {
+
         let cancel = false;
         check().then((response) => {
-            if(!cancel) {
-                console.log(response);
-                response.errors ? setAuthenticated(false) : setAuthenticated(response.data.isAuthenticated)
+            if (!cancel) {
+                response.error ? setAuthenticated(false) : setAuthenticated(response.data.isAuthenticated)
             }
         });
-        return  () => {
+        return () => {
             cancel = true;
         }
-    },[]);
+    }, []);
 
     return authenticated
 }

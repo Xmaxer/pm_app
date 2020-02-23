@@ -1,4 +1,2 @@
-export const START_LOADING_ACTION = 'SET_LOADING_TRUE';
-export const STOP_LOADING_ACTION = 'SET_LOADING_FALSE';
-export const LOGIN_ACTION = 'LOGIN';
-export const LOGOUT_ACTION = 'LOGOUT';
+export const SET_LOGIN = 'SET_LOGIN';
+export const SET_LOADING = 'SET_LOADING';

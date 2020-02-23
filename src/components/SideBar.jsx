@@ -6,6 +6,10 @@ import CompaniesIcon from '@material-ui/icons/Business';
 import APIIcon from '@material-ui/icons/SettingsInputHdmi';
 import SettingsIcon from '@material-ui/icons/Tune';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
+import {useMutation} from 'graphql-hooks'
+import {LOGOUT_MUTATION} from "../assets/queries";
+import {Redirect} from 'react-router-dom'
+import {paths} from "../assets/paths";
 
 const drawerWidth = 300;
 
@@ -48,36 +52,43 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-const options = [
-    {
-        link: '/dashboard',
-        title: 'Dashboard',
-        icon: <DashboardIcon/>
-    },
-    {
-        link: '/companies',
-        title: 'My Companies',
-        icon: <CompaniesIcon/>
-    },
-    {
-        link: '/api-settings',
-        title: 'API Settings',
-        icon: <APIIcon/>
-    },
-    {
-        link: '/user-settings',
-        title: 'Account Settings',
-        icon: <SettingsIcon/>
-    },
-    {
-        link: '/logout',
-        title: 'Logout',
-        icon: <LogoutIcon/>
-    },
-];
-
-function SideBar({title, location}) {
+function SideBar(props) {
     const classes = useStyles();
+    const [logout, {loading, error, data}] = useMutation(LOGOUT_MUTATION);
+    const title = paths[props.location.pathname] ? paths[props.location.pathname] : "PM";
+
+    const options = [
+        {
+            link: '/dashboard',
+            title: 'Dashboard',
+            icon: <DashboardIcon/>
+        },
+        {
+            link: '/companies',
+            title: 'My Companies',
+            icon: <CompaniesIcon/>
+        },
+        {
+            link: '/api-settings',
+            title: 'API Settings',
+            icon: <APIIcon/>
+        },
+        {
+            link: '/user-settings',
+            title: 'Account Settings',
+            icon: <SettingsIcon/>
+        },
+        {
+            title: 'Logout',
+            icon: <LogoutIcon/>,
+            action: logout
+        },
+    ];
+
+    if (data && data.logout.success) {
+        return <Redirect to={{pathname: '/login'}}/>
+    }
+
     return (
         <div>
             <Drawer
@@ -94,9 +105,15 @@ function SideBar({title, location}) {
                 <div>
                     <List>
                         {options.map((option, index) => (
-                            <>
+                            option.link ? <>
                                 <ListItem button key={option.title} href={option.link} component={'a'}
-                                          disabled={location === option.link}>
+                                          disabled={props.location.pathname === option.link}>
+                                    <ListItemIcon className={classes.icon}>{option.icon}</ListItemIcon>
+                                    <ListItemText primary={option.title}/>
+                                </ListItem>
+                                <Divider/>
+                            </> : <>
+                                <ListItem button key={option.title} onClick={option.action}>
                                     <ListItemIcon className={classes.icon}>{option.icon}</ListItemIcon>
                                     <ListItemText primary={option.title}/>
                                 </ListItem>

@@ -1,4 +1,3 @@
-
 const initialState = {
     loggedIn: false,
     loading: false
