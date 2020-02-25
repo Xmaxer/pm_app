@@ -16,6 +16,7 @@ export const COMPANIES_QUERY = `query Companies($first: Int, $skip: Int, $order:
   companies(order: $order, skip: $skip, first: $first, filter: $filter) {
     id
     name
+    description
     numberOfAssets
   }
 }
@@ -62,6 +63,16 @@ export const COMPANY_USERS_QUERY = `query Company($companyId: ID!)
         colour
         id
       }
+    }
+  }
+}
+`;
+
+export const COMPANY_MUTATION = `mutation Company($name: String!, $description: String, $id: ID){
+  company(input: {companyDetails:{name: $name, description: $description, id: $id}}) {
+    company {
+      name
+      id
     }
   }
 }

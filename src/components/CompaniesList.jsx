@@ -1,54 +1,18 @@
-import React from 'react';
-import {makeStyles, withStyles} from '@material-ui/core/styles';
-import {IconButton, Table, TableBody, TableCell, TableHead, TableRow, Typography} from '@material-ui/core'
-import {useQuery} from 'graphql-hooks'
-import {COMPANIES_QUERY} from "../assets/queries";
+import React, {useState} from 'react';
+import {makeStyles} from '@material-ui/core/styles';
+import {useMutation, useQuery} from 'graphql-hooks'
+import {COMPANIES_QUERY, COMPANY_MUTATION} from "../assets/queries";
 import DeleteIcon from '@material-ui/icons/Delete';
 import SettingsIcon from '@material-ui/icons/Build';
+import GenericList from "./GenericList";
+import {StyledIconButton, StyledTableCell, StyledTableRow} from "../assets/styledElements";
 
-const useStyles = makeStyles(theme => ({
-    container: {
-        backgroundColor: theme.palette.secondary.main,
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center'
-    },
-    title: {
-        padding: 10,
-        color: theme.palette.common.white,
-    },
-    action: {
-        color: theme.palette.tertiary.main
-    }
-}));
+const useStyles = makeStyles(theme => ({}));
 
-const StyledTableCell = withStyles(theme => ({
-    head: {
-        backgroundColor: theme.palette.secondary.main,
-        color: theme.palette.common.white,
-        textAlign: 'center',
-    },
-    body: {
-        fontSize: 14,
-        width: 200,
-        textAlign: 'center',
-        color: theme.palette.common.white,
-    },
-}))(TableCell);
-
-const StyledTableRow = withStyles(theme => ({
-    root: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.secondary.light,
-        },
-        '&:nth-of-type(even)': {
-            backgroundColor: theme.palette.secondary.dark,
-        },
-    },
-}))(TableRow);
-
-function CompaniesList({summary = true}) {
+function CompaniesList() {
     const classes = useStyles();
+
+    const [form, setForm] = useState({});
 
     const {loading, error, data} = useQuery(COMPANIES_QUERY, {
         variables: {
@@ -56,44 +20,48 @@ function CompaniesList({summary = true}) {
         }
     });
 
-    return (
-        <div className={classes.container}>
-            <Typography variant={'h4'} className={classes.title}>Companies</Typography>
-            <Table>
-                <TableHead>
-                    <TableRow>
-                        <StyledTableCell>Company Name</StyledTableCell>
-                        <StyledTableCell>Number of Assets</StyledTableCell>
-                        <StyledTableCell>Data</StyledTableCell>
-                        <StyledTableCell>Avg Accuracy</StyledTableCell>
-                        {
-                            summary ? null : <StyledTableCell>Actions</StyledTableCell>
-                        }
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {
-                        loading ? "Loading" : data.companies ? data.companies.map(company => (
-                            <StyledTableRow key={company.id}>
-                                <StyledTableCell>{company.name}</StyledTableCell>
-                                <StyledTableCell>{company.numberOfAssets}</StyledTableCell>
-                                <StyledTableCell>1.0gb</StyledTableCell>
-                                <StyledTableCell>50%</StyledTableCell>
-                                {
-                                    summary ? null : <StyledTableCell>
-                                        <IconButton className={classes.action}>
-                                            <DeleteIcon/>
-                                        </IconButton>
-                                        <IconButton href={'/dashboard/company/' + company.id}
-                                                    className={classes.action}><SettingsIcon/></IconButton>
-                                    </StyledTableCell>
-                                }
-                            </StyledTableRow>
-                        )) : "No companies to show!"
+    const [updateCompany, {loading2, error2, data2}] = useMutation(COMPANY_MUTATION, {
+        variables: {
+            ...form
+        }
+    });
+
+    const handleChange = (event) => {
+        const name = event.target.name;
+        const value = event.target.value;
+
+        setForm({
+            ...form,
+            [name]: value
+        })
+    };
+
+    let rows = data && data.companies ? data.companies.map((row) => (
+        <StyledTableRow key={row.id}>
+            {
+                Object.entries(row).map(([key, value]) => {
+                        if (key !== 'id') return <StyledTableCell>{value}</StyledTableCell>;
                     }
-                </TableBody>
-            </Table>
-        </div>
+                )
+            }
+            <StyledTableCell>DATA</StyledTableCell>
+            <StyledTableCell>ACCURACY</StyledTableCell>
+            <StyledTableCell>
+                <StyledIconButton>
+                    <DeleteIcon/>
+                </StyledIconButton>
+                <StyledIconButton href={'/dashboard/company/' + row.id}>
+                    <SettingsIcon/>
+                </StyledIconButton>
+            </StyledTableCell>
+
+        </StyledTableRow>
+    )) : null;
+
+    return (
+        <GenericList headers={["Company Name", "Description", "Number of Assets", "Data", "Avg Accuracy", "Actions"]}
+                     rows={rows}
+                     loading={loading} title={"Companies"}/>
     );
 }
 

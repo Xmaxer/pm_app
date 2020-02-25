@@ -3,10 +3,12 @@ import {Redirect, Route} from 'react-router-dom'
 import useAuthenticated from "../hooks/useAuthenticated";
 import SideBar from "./SideBar";
 import {makeStyles} from '@material-ui/core/styles';
+import {LinearProgress} from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
+        width: '100%'
     }
 }));
 
@@ -15,8 +17,9 @@ function ProtectedRoute({component: Component, ...rest}) {
     const authenticated = useAuthenticated();
 
     if (authenticated === null) {
-        return (<h1>LOADING SECURE</h1>)
+        return (<div style={{width: '100%'}}><LinearProgress color={"secondary"}/></div>)
     }
+
     return (
         <Route
             {...rest}

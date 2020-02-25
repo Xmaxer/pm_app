@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {Button, Grid, TextField, Typography} from '@material-ui/core';
+import {Button, CircularProgress, Grid, TextField, Typography} from '@material-ui/core';
 import {useMutation} from 'graphql-hooks'
 import {LOGIN_MUTATION} from "../assets/queries";
 import Cookie from 'universal-cookie'
@@ -65,9 +65,8 @@ function Login(props) {
 
     return redirect ? (<Redirect to={{pathname: url ? url : '/'}}/>) : (
         <form onSubmit={handleSubmit} className={classes.container}>
-            <Grid container alignItems={'center'} justify={'center'} spacing={2} className={classes.container}>
-
-                <Grid container spacing={5} direction={'column'} alignItems={'center'} justify={'center'}>
+            <Grid container={true} alignItems={'center'} justify={'center'} spacing={2} className={classes.container}>
+                <Grid container={true} spacing={5} direction={'column'} alignItems={'center'} justify={'center'}>
                     <Grid item xs={12} className={classes.item}>
                         <Typography variant={'h4'}>Login</Typography>
                     </Grid>
@@ -83,10 +82,12 @@ function Login(props) {
                     <Grid item xs={12}>
                         <Button variant={"contained"} color={"primary"} className={classes.button} type={'submit'}
                                 disabled={loading}>
-                            Login
+                            {
+                                loading ? <CircularProgress/> : "Login"
+                            }
                         </Button>
                     </Grid>
-                    <Grid container item direction={"row"} xs={12}>
+                    <Grid container={true} item={true} direction={"row"} xs={12}>
                         <Grid item xs={6}>
                             <Button variant={"contained"} color={"primary"} className={classes.button}
                                     href={"/register"}>
@@ -100,7 +101,6 @@ function Login(props) {
                         </Grid>
                     </Grid>
                 </Grid>
-
             </Grid>
         </form>
     );
