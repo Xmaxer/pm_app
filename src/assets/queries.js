@@ -78,4 +78,25 @@ export const COMPANY_MUTATION = `mutation Company($name: String!, $description: 
 }
 `;
 
+export const ASSET_MUTATION = `mutation Asset($name: String!, $description: String, $companyId: ID!, $id: ID){
+  asset(input: {assetDetails:{name: $name, description: $description, companyId: $companyId, id: $id}}){
+    asset {
+      id
+    }
+  }
+}
+`;
+
+export const DELETE_COMPANY_MUTATION = `mutation Company($id: ID!){
+  deleteCompany(input: {id: $id})
+  {
+    company {
+      id
+      name
+      description
+    }
+  }
+}
+`;
+
 export const IS_AUTHENTICATED_QUERY = `query {isAuthenticated}`;
