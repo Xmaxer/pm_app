@@ -15,7 +15,11 @@
     "@material-ui/lab": "4.0.0-alpha.44",
     "react-router-dom": "5.1.2",
     "graphql-hooks": "4.4.2",
-    "universal-cookie": "4.0.3"
+    "universal-cookie": "4.0.3",
+    "apollo-upload-client": "12.1.0",
+    "formik": "2.1.4",
+    "material-ui-dropzone": "2.4.8",
+    "line-navigator": "2.1.6"
   },
   "devDependencies": {
     "cross-env": "7.0.0"

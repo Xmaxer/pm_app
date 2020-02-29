@@ -71,8 +71,10 @@ export const COMPANY_USERS_QUERY = `query Company($companyId: ID!)
 export const COMPANY_MUTATION = `mutation Company($name: String!, $description: String, $id: ID){
   company(input: {companyDetails:{name: $name, description: $description, id: $id}}) {
     company {
-      name
-      id
+          id
+    name
+    description
+    numberOfAssets
     }
   }
 }
@@ -82,6 +84,8 @@ export const ASSET_MUTATION = `mutation Asset($name: String!, $description: Stri
   asset(input: {assetDetails:{name: $name, description: $description, companyId: $companyId, id: $id}}){
     asset {
       id
+      name
+      description
     }
   }
 }
@@ -95,6 +99,24 @@ export const DELETE_COMPANY_MUTATION = `mutation Company($id: ID!){
       name
       description
     }
+  }
+}
+`;
+
+export const DELETE_ASSET_MUTATION = `mutation Asset($id: ID!) {
+  deleteAsset(input: {id: $id}){
+    asset {
+      id
+      name
+      description
+    }
+  }
+}
+`;
+
+export const UPLOAD_ASSET_FILE_MUTATION = `mutation File($assetId: ID!, $file: Upload!){
+  uploadAssetData(input: {assetId: $assetId, file: $file}){
+    success
   }
 }
 `;

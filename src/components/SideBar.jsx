@@ -90,7 +90,7 @@ function SideBar(props) {
     }
 
     return (
-        <div>
+        <>
             <Drawer
                 className={classes.drawer}
                 variant="permanent"
@@ -128,7 +128,7 @@ function SideBar(props) {
                     <Typography>Contact</Typography>
                 </div>
             </Drawer>
-        </div>
+        </>
     );
 }
 

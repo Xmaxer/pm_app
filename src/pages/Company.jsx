@@ -8,7 +8,10 @@ const useStyles = makeStyles(theme => ({
     content: {
         flexGrow: 1,
         padding: theme.spacing(3),
-        width: '100%'
+        width: '100%',
+        '& > *': {
+            marginBottom: 20
+        }
     }
 }));
 
