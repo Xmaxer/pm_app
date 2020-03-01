@@ -1,9 +1,13 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import {DropzoneArea} from 'material-ui-dropzone'
 import {
     Button,
     Checkbox,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
     FormControlLabel,
     FormGroup,
     IconButton,
@@ -106,6 +110,19 @@ const useStyles = makeStyles(theme => ({
     },
     markedForFeatureIcon: {
         color: '#0082ae',
+    },
+    dialogTitle: {
+        backgroundColor: theme.palette.tertiary.dark
+    },
+    dialogContent: {
+        backgroundColor: theme.palette.tertiary.dark
+    },
+    dialogActions: {
+        backgroundColor: theme.palette.tertiary.dark
+    },
+    skeletons: {
+        width: '95%',
+        padding: theme.spacing(2)
     }
 }));
 
@@ -116,7 +133,6 @@ function Asset() {
     const [file, setFile] = useState(null);
     const [previewData, setPreviewData] = useState(null);
     const [uploadFile, {loading}] = useMutation(UPLOAD_ASSET_FILE_MUTATION);
-    const [hasHeader, setHasHeader] = useState(false);
     const [headers, setHeaders] = useState([]);
     const [selectedColumns, setSelectedColumns] = useState({
         remove: [],
@@ -125,8 +141,20 @@ function Asset() {
     });
     const [modifyingHeader, setModifyingHeader] = useState(null);
     const [oldHeader, setOldHeader] = useState([]);
+    const [openSeparatorDialog, setOpenSeparatorDialog] = useState(false);
 
-    const handleFile = (file) => {
+    useEffect(() => {
+        if (file === null) {
+            setSelectedColumns({
+                remove: [],
+                labels: [],
+                features: []
+            });
+            setPreviewData(null);
+            setHeaders([])
+        }
+    }, [file]);
+    const handleFile = (file, separator) => {
         if (file !== null) {
             const n = new LineNavigator(file);
             n.readLines(0, 20, (err, index, lines, isEof, progress) => {
@@ -135,9 +163,9 @@ function Asset() {
                 let defaultLabels = [];
                 let defaultFeatures = [];
                 lines.forEach((line, index) => {
-                    const split = line.trim().split(" ");
+                    const split = line.trim().split(separator);
 
-                    if (headers.length === 0 && !hasHeader) split.forEach((v, i) => {
+                    if (headers.length === 0) split.forEach((v, i) => {
                         headers.push("Column " + i)
                     });
                     if (defaultLabels.length === 0) defaultLabels.push(0);
@@ -149,7 +177,6 @@ function Asset() {
                 setSelectedColumns({...selectedColumns, labels: defaultLabels, features: defaultFeatures});
                 setHeaders(headers);
                 setPreviewData(data);
-                setFile(file);
             })
         }
     };
@@ -164,8 +191,6 @@ function Asset() {
             }
         }).then((res) => {
             setFile(null);
-            setPreviewData(null);
-            setHeaders([])
         })
     };
 
@@ -211,13 +236,26 @@ function Asset() {
             newData.shift();
             setPreviewData(newData)
         } else {
-            let oldData = oldHeader;
             let newData = previewData;
-            newData.push([oldData]);
+            newData.unshift([headers]);
             setHeaders(oldHeader);
             setPreviewData(newData);
             setOldHeader([]);
         }
+    };
+
+    const handleDialogClose = (separator) => {
+        if (separator !== undefined) {
+            handleFile(file, separator)
+        } else {
+            setFile(null)
+        }
+        setOpenSeparatorDialog(false)
+    };
+
+    const handleDialogOpen = (file) => {
+        setFile(file);
+        setOpenSeparatorDialog(true);
     };
 
     const accept = ["application/vnd.ms-excel", ".csv", "text/plain", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
@@ -236,7 +274,8 @@ function Asset() {
                     </label>
                 </div>
                 <DropzoneArea acceptedFiles={accept}
-                              onDrop={handleFile} filesLimit={1} maxFileSize={50000000} showPreviewsInDropzone={false}
+                              onDrop={handleDialogOpen} filesLimit={1} maxFileSize={50000000}
+                              showPreviewsInDropzone={false}
                               dropzoneClass={classes.dropzone}
                               dropzoneText={<Typography
                                   className={classes.dropzoneText}>{file ? file.name : "Drag .csv/.txt file here"}</Typography>}
@@ -337,6 +376,28 @@ function Asset() {
                     }
                 </div>
             </div>
+            <Dialog open={openSeparatorDialog} onClose={handleDialogClose}>
+                <DialogTitle onClose={handleDialogClose} className={classes.dialogTitle}>
+                    <Typography>Separator</Typography>
+                </DialogTitle>
+                <DialogContent className={classes.dialogContent}>
+                    <Typography>Choose your separator</Typography>
+                </DialogContent>
+                <DialogActions className={classes.dialogActions}>
+                    <Button onClick={() => handleDialogClose(" ")} color={"secondary"}>
+                        Space
+                    </Button>
+                    <Button onClick={() => handleDialogClose(",")} color={"secondary"}>
+                        Comma
+                    </Button>
+                    <Button onClick={() => handleDialogClose(";")} color={"secondary"}>
+                        Semi-colon
+                    </Button>
+                    <Button onClick={() => handleDialogClose()} color={"primary"}>
+                        Cancel
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     );
 }
