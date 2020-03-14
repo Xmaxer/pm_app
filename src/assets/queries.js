@@ -114,8 +114,8 @@ export const DELETE_ASSET_MUTATION = `mutation Asset($id: ID!) {
 }
 `;
 
-export const UPLOAD_ASSET_FILE_MUTATION = `mutation File($assetId: ID!, $file: Upload!, $headers: [String!]!, $remove: [Int!]!, $labels: [Int!]!, $features: [Int!]!){
-  uploadAssetData(input: {assetId: $assetId, file: $file, headers: $headers, columnTypes: {remove: $remove, labels: $labels, features: $features}}){
+export const UPLOAD_ASSET_FILE_MUTATION = `mutation File($assetId: ID!, $files: [Upload!]!, $headers: [String!]!, $remove: [Int!]!, $labels: [Int!]!, $features: [Int!]!){
+  uploadAssetData(input: {assetId: $assetId, files: $files, headers: $headers, columnTypes: {remove: $remove, labels: $labels, features: $features}}){
     success
   }
 }

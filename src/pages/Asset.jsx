@@ -74,9 +74,6 @@ const useStyles = makeStyles(theme => ({
         '& div': {
             display: 'flex',
         },
-        '& svg': {
-            display: 'none'
-        },
         height: '80%',
         backgroundColor: theme.palette.secondary.main
     },
@@ -130,7 +127,7 @@ function Asset() {
 
     const classes = useStyles();
     const {company_id, asset_id} = useParams();
-    const [file, setFile] = useState(null);
+    const [files, setFiles] = useState([]);
     const [previewData, setPreviewData] = useState(null);
     const [uploadFile, {loading}] = useMutation(UPLOAD_ASSET_FILE_MUTATION);
     const [headers, setHeaders] = useState([]);
@@ -144,7 +141,7 @@ function Asset() {
     const [openSeparatorDialog, setOpenSeparatorDialog] = useState(false);
 
     useEffect(() => {
-        if (file === null) {
+        if (files.length === 0) {
             setSelectedColumns({
                 remove: [],
                 labels: [],
@@ -153,9 +150,13 @@ function Asset() {
             setPreviewData(null);
             setHeaders([])
         }
-    }, [file]);
-    const handleFile = (file, separator) => {
-        if (file !== null) {
+    }, [files]);
+
+    const handleFile = (separator) => {
+        let file = null;
+        if (files.length > 0)
+            file = files[0];
+        if (file !== null && previewData === null) {
             const n = new LineNavigator(file);
             n.readLines(0, 20, (err, index, lines, isEof, progress) => {
                 let data = [];
@@ -185,12 +186,12 @@ function Asset() {
         uploadFile({
             variables: {
                 assetId: asset_id,
-                file: file,
+                files: files,
                 headers: headers,
                 ...selectedColumns
             }
         }).then((res) => {
-            setFile(null);
+            setFiles([]);
         })
     };
 
@@ -246,16 +247,18 @@ function Asset() {
 
     const handleDialogClose = (separator) => {
         if (separator !== undefined) {
-            handleFile(file, separator)
+            handleFile(separator)
         } else {
-            setFile(null)
+            setFiles([])
         }
         setOpenSeparatorDialog(false)
     };
 
-    const handleDialogOpen = (file) => {
-        setFile(file);
-        setOpenSeparatorDialog(true);
+    const handleDialogOpen = (newFile) => {
+        setFiles([...files, newFile]);
+        if (files.length === 0) {
+            setOpenSeparatorDialog(true);
+        }
     };
 
     const accept = ["application/vnd.ms-excel", ".csv", "text/plain", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"];
@@ -274,14 +277,17 @@ function Asset() {
                     </label>
                 </div>
                 <DropzoneArea acceptedFiles={accept}
-                              onDrop={handleDialogOpen} filesLimit={1} maxFileSize={50000000}
-                              showPreviewsInDropzone={false}
+                              onDrop={handleDialogOpen} maxFileSize={50000000}
+                              showPreviewsInDropzone={true}
+                              useChipsForPreview={true}
+                              filesLimit={100}
                               dropzoneClass={classes.dropzone}
                               dropzoneText={<Typography
-                                  className={classes.dropzoneText}>{file ? file.name : "Drag .csv/.txt file here"}</Typography>}
-                              onDelete={() => {
-                                  setFile(null)
-                              }} initialFiles={file ? file : []}
+                                  className={classes.dropzoneText}>{files.length > 0 ? files.map((f) => f.name + ", ") : "Drag .csv/.txt files here"}</Typography>}
+                              onDelete={(file) => {
+                                  const newFiles = files.filter((f) => f !== file);
+                                  setFiles(newFiles)
+                              }} initialFiles={files}
                 />
                 <Button variant={'contained'} color={'primary'} endIcon={<CloudUploadIcon/>} onClick={handleUpload}
                         className={classes.uploadButton}>Upload
@@ -289,21 +295,21 @@ function Asset() {
             </div>
             <div className={classes.container} style={{flexDirection: 'column'}}>
                 {
-                    previewData && file ?
+                    previewData && files.length > 0 ?
                         <div className={classes.container + ' ' + classes.containerCentered}>
                             <Typography variant={'h4'} className={classes.dataTitle} color={"textSecondary"}>Preview of
                                 data
-                                from {file.name}</Typography>
+                                from {files[0].name}</Typography>
                             <FormControlLabel control={<Checkbox onChange={handleSetHeader} color={"primary"}/>}
                                               label={"Has header?"} style={{marginLeft: 'auto'}}/>
                         </div> : null
                 }
                 <div className={classes.container + ' ' + classes.containerOverflow}>
                     {
-                        file && !previewData ? <div className={classes.skeletons}>
+                        files.length > 0 && !previewData ? <div className={classes.skeletons}>
                             <Skeleton variant={'text'} height={100} animation="wave"/>
                             <Skeleton variant={'rect'} height={300} animation="wave"/>
-                        </div> : file && previewData ? <Table>
+                        </div> : files.length > 0 && previewData ? <Table>
                             <TableHead>
                                 <TableRow>
                                     {

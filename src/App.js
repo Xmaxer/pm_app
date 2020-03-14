@@ -18,10 +18,11 @@ import Asset from "./pages/Asset";
 
 const cookies = new Cookies();
 
+console.log(process.env);
 
 const client = new GraphQLClient({
 
-    url: 'http://localhost:3005/api',
+    url: 'http://' + process.env.REACT_APP_SERVER_HOST_NAME + ":" + process.env.REACT_APP_SERVER_PORT + '/api',
     headers: {
         Authorization: 'Basic ' + cookies.get('token')
     }
