@@ -139,6 +139,7 @@ function Asset() {
     const [modifyingHeader, setModifyingHeader] = useState(null);
     const [oldHeader, setOldHeader] = useState([]);
     const [openSeparatorDialog, setOpenSeparatorDialog] = useState(false);
+    const [separator, setSeparator] = useState(null);
 
     useEffect(() => {
         if (files.length === 0) {
@@ -188,7 +189,8 @@ function Asset() {
                 assetId: asset_id,
                 files: files,
                 headers: headers,
-                ...selectedColumns
+                ...selectedColumns,
+                separator: separator
             }
         }).then((res) => {
             setFiles([]);
@@ -247,6 +249,7 @@ function Asset() {
 
     const handleDialogClose = (separator) => {
         if (separator !== undefined) {
+            setSeparator(separator);
             handleFile(separator)
         } else {
             setFiles([])
