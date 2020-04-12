@@ -96,7 +96,7 @@ function CompaniesList() {
     return (
         <div className={classes.container}>
             <GenericList
-                headers={["Company Name", "Description", "Number of Assets", "Data", "Avg Accuracy", "Actions"]}
+                headers={["Company Name", "Description", "Number of Assets", "Dashboard URL", "Data", "Avg Accuracy", "Actions"]}
                 rows={rows}
                 loading={loading || loading2} title={"Companies"}/>
             {
