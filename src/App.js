@@ -22,7 +22,7 @@ console.log(process.env);
 
 const client = new GraphQLClient({
 
-    url: 'http://' + process.env.REACT_APP_SERVER_HOST_NAME + ":" + process.env.REACT_APP_SERVER_PORT + '/api',
+    url: 'http://' + process.env.REACT_APP_SERVER_URL + '/api',
     headers: {
         Authorization: 'Basic ' + cookies.get('token')
     }
