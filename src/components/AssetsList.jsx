@@ -9,6 +9,7 @@ import GenericList from "./GenericList";
 import {Button, IconButton, TextField} from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add';
 import {Formik} from 'formik';
+import BarChartIcon from '@material-ui/icons/BarChart';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -31,6 +32,7 @@ function AssetsList({company_id}) {
 
     const [renderForm, setRenderForm] = useState(false);
     const [assets, setAssets] = useState([]);
+    const [dashboardUrl, setDashboardUrl] = useState(null);
 
     const [getAssets, {loading, error}] = useManualQuery(COMPANY_ASSETS_QUERY, {
         variables: {
@@ -51,7 +53,8 @@ function AssetsList({company_id}) {
     useEffect(() => {
         getAssets().then((res) => {
             if (!res.error)
-                setAssets(res.data.company.assets)
+                setAssets(res.data.company.assets);
+            setDashboardUrl(res.data.company.dashboardUrl)
         })
     }, []);
 
@@ -91,6 +94,10 @@ function AssetsList({company_id}) {
                 </StyledIconButton>
                 <StyledIconButton href={'/dashboard/company/' + company_id + '/asset/' + row.id}>
                     <SettingsIcon/>
+                </StyledIconButton>
+                <StyledIconButton href={"http://192.168.79.129:3000" + dashboardUrl} disabled={dashboardUrl === null}
+                                  target={"_blank"}>
+                    <BarChartIcon/>
                 </StyledIconButton>
             </StyledTableCell>
 

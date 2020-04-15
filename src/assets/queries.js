@@ -17,8 +17,8 @@ export const COMPANIES_QUERY = `query Companies($first: Int, $skip: Int, $order:
     id
     name
     description
-    dashboard_url
     numberOfAssets
+    dashboardUrl
   }
 }
 `;
@@ -47,6 +47,7 @@ export const COMPANY_ASSETS_QUERY = `query Company($companyId: ID!){
       name
       description
     }
+    dashboardUrl
   }
 }
 `;
@@ -76,7 +77,7 @@ export const COMPANY_MUTATION = `mutation Company($name: String!, $description: 
     name
     description
     numberOfAssets
-    dashboard_url
+    dashboardUrl
     }
   }
 }

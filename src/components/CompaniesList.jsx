@@ -9,6 +9,7 @@ import {StyledIconButton, StyledTableCell, StyledTableRow} from "../assets/style
 import {Button, IconButton, TextField} from '@material-ui/core'
 import {Formik} from 'formik';
 import AddIcon from '@material-ui/icons/Add';
+import BarChartIcon from '@material-ui/icons/BarChart';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -87,6 +88,10 @@ function CompaniesList() {
                 </StyledIconButton>
                 <StyledIconButton href={'/dashboard/company/' + row.id}>
                     <SettingsIcon/>
+                </StyledIconButton>
+                <StyledIconButton href={"http://192.168.79.129:3000" + row.dashboardUrl}
+                                  disabled={row.dashboardUrl === null} target={"_blank"}>
+                    <BarChartIcon/>
                 </StyledIconButton>
             </StyledTableCell>
 
