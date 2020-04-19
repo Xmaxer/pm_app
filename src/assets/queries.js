@@ -140,3 +140,16 @@ export const ASSET_QUERY = `query Asset($assetId: Int!){
   }
 }
 `;
+
+export const DELETE_API_KEY_MUTATION = `
+mutation ApiKey($id: ID!){
+  deleteApiKey(input: {id: $id}){
+    apiKey {
+      id
+    }
+  }
+}
+
+
+`;
+
