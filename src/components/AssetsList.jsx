@@ -77,15 +77,10 @@ function AssetsList({company_id}) {
 
     let rows = assets.length !== 0 ? assets.map((row) => (
         <StyledTableRow key={row.id}>
-            {
-                Object.entries(row).map(([key, value]) => {
-                        if (key !== 'id') return <StyledTableCell>{value}</StyledTableCell>;
-                    }
-                )
-            }
-            <StyledTableCell>DATA</StyledTableCell>
-            <StyledTableCell>ACCURACY</StyledTableCell>
-            <StyledTableCell>ALGORITHM</StyledTableCell>
+            <StyledTableCell>{row.name}</StyledTableCell>
+            <StyledTableCell>{row.description}</StyledTableCell>
+            <StyledTableCell>{(row.files.totalSize / 1000000) + " MB"}</StyledTableCell>
+            <StyledTableCell>{row.algorithm}</StyledTableCell>
             <StyledTableCell>
                 <StyledIconButton onClick={() => {
                     handleDelete(row.id)
@@ -106,7 +101,7 @@ function AssetsList({company_id}) {
 
     return (
         <div className={classes.container}>
-            <GenericList headers={["Name", "Description", "Data Used", "Accuracy", "Algorithm", "Actions"]} rows={rows}
+            <GenericList headers={["Name", "Description", "Data Used", "Algorithm", "Actions"]} rows={rows}
                          loading={loading || loading2} title={"Assets"}/>
             {
                 renderForm ?

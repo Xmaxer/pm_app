@@ -19,6 +19,7 @@ export const COMPANIES_QUERY = `query Companies($first: Int, $skip: Int, $order:
     description
     numberOfAssets
     dashboardUrl
+    totalSize
   }
 }
 `;
@@ -46,6 +47,10 @@ export const COMPANY_ASSETS_QUERY = `query Company($companyId: ID!){
       id
       name
       description
+      files {
+        totalSize
+      }
+      algorithm
     }
     dashboardUrl
   }
@@ -125,3 +130,12 @@ export const UPLOAD_ASSET_FILE_MUTATION = `mutation File($assetId: ID!, $files: 
 `;
 
 export const IS_AUTHENTICATED_QUERY = `query {isAuthenticated}`;
+
+export const ASSET_QUERY = `query Asset($assetId: Int!){
+  asset(assetId: $assetId) {
+    files{
+      numberOfFiles
+    }
+  }
+}
+`;

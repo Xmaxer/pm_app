@@ -20,8 +20,8 @@ import {
 } from '@material-ui/core'
 import FolderOpenIcon from '@material-ui/icons/FolderOpen';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import {useMutation} from 'graphql-hooks'
-import {UPLOAD_ASSET_FILE_MUTATION} from "../assets/queries";
+import {useManualQuery, useMutation} from 'graphql-hooks'
+import {ASSET_QUERY, UPLOAD_ASSET_FILE_MUTATION} from "../assets/queries";
 import {useParams} from 'react-router-dom'
 import LineNavigator from 'line-navigator'
 import {Skeleton} from '@material-ui/lab';
@@ -120,6 +120,9 @@ const useStyles = makeStyles(theme => ({
     skeletons: {
         width: '95%',
         padding: theme.spacing(2)
+    },
+    numberOfFiles: {
+        marginLeft: 'auto'
     }
 }));
 
@@ -130,6 +133,12 @@ function Asset() {
     const [files, setFiles] = useState([]);
     const [previewData, setPreviewData] = useState(null);
     const [uploadFile, {loading}] = useMutation(UPLOAD_ASSET_FILE_MUTATION);
+    const [getAsset, {loading2, error}] = useManualQuery(ASSET_QUERY, {
+        variables: {
+            assetId: parseInt(asset_id)
+        }
+    });
+    const [numberOfFiles, setNumberOfFiles] = useState(0);
     const [headers, setHeaders] = useState([]);
     const [selectedColumns, setSelectedColumns] = useState({
         remove: [],
@@ -152,6 +161,12 @@ function Asset() {
             setHeaders([])
         }
     }, [files]);
+
+    useEffect(() => {
+        getAsset().then((res) => {
+            setNumberOfFiles(res.data.asset.files.numberOfFiles);
+        })
+    }, []);
 
     const handleFile = (separator) => {
         let file = null;
@@ -193,6 +208,7 @@ function Asset() {
                 separator: separator
             }
         }).then((res) => {
+            setNumberOfFiles(numberOfFiles + 1);
             setFiles([]);
         })
     };
@@ -280,7 +296,7 @@ function Asset() {
                     </label>
                 </div>
                 <DropzoneArea acceptedFiles={accept}
-                              onDrop={handleDialogOpen} maxFileSize={50000000}
+                              onDrop={handleDialogOpen} maxFileSize={5000000000}
                               showPreviewsInDropzone={true}
                               useChipsForPreview={true}
                               filesLimit={100}
@@ -292,6 +308,9 @@ function Asset() {
                                   setFiles(newFiles)
                               }} initialFiles={files}
                 />
+                <div className={classes.numberOfFiles}>
+                    <Typography>Number of files uploaded: {numberOfFiles}</Typography>
+                </div>
                 <Button variant={'contained'} color={'primary'} endIcon={<CloudUploadIcon/>} onClick={handleUpload}
                         className={classes.uploadButton}>Upload
                     & Start</Button>

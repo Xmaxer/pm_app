@@ -72,14 +72,12 @@ function CompaniesList() {
 
     let rows = companies.length !== 0 ? companies.map((row) => (
         <StyledTableRow key={row.id}>
-            {
-                Object.entries(row).map(([key, value]) => {
-                        if (key !== 'id') return <StyledTableCell>{value}</StyledTableCell>;
-                    }
-                )
-            }
-            <StyledTableCell>DATA</StyledTableCell>
-            <StyledTableCell>ACCURACY</StyledTableCell>
+
+            <StyledTableCell>{row.name}</StyledTableCell>
+            <StyledTableCell>{row.description}</StyledTableCell>
+            <StyledTableCell>{row.numberOfAssets}</StyledTableCell>
+            <StyledTableCell>{row.dashboardUrl}</StyledTableCell>
+            <StyledTableCell>{(row.totalSize / 1000000) + " MB"}</StyledTableCell>
             <StyledTableCell>
                 <StyledIconButton onClick={() => {
                     handleDelete(row.id)
@@ -101,7 +99,7 @@ function CompaniesList() {
     return (
         <div className={classes.container}>
             <GenericList
-                headers={["Company Name", "Description", "Number of Assets", "Dashboard URL", "Data", "Avg Accuracy", "Actions"]}
+                headers={["Company Name", "Description", "Number of Assets", "Dashboard URL", "Data", "Actions"]}
                 rows={rows}
                 loading={loading || loading2} title={"Companies"}/>
             {
