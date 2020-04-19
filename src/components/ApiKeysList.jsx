@@ -16,13 +16,10 @@ function ApiKeysList() {
 
     let rows = data && data.apiKeys ? data.apiKeys.map((row) => (
         <StyledTableRow key={row.id}>
-            {
-                Object.entries(row).map(([key, value]) => {
-                        if (key !== 'id') return <StyledTableCell>{value}</StyledTableCell>;
-                    }
-                )
-            }
-            <StyledTableCell>DATE</StyledTableCell>
+            <StyledTableCell>{row.name}</StyledTableCell>
+            <StyledTableCell>{row.companyName}</StyledTableCell>
+            <StyledTableCell>{row.apiKey}</StyledTableCell>
+            <StyledTableCell>{row.lastUsed ? row.lastUsed : "Never"}</StyledTableCell>
         </StyledTableRow>
     )) : null;
 

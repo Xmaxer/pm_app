@@ -30,6 +30,7 @@ export const API_KEYS_QUERY = `query ApiKeys($first: Int, $skip: Int, $order: Ap
     name
     companyName
     apiKey
+    lastUsed
   }
 }
 `;
