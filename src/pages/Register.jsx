@@ -5,6 +5,8 @@ import {useMutation} from 'graphql-hooks'
 import {REGISTER_MUTATION} from "../assets/queries";
 import Cookie from 'universal-cookie'
 import {Redirect} from 'react-router-dom'
+import {ADD_ERRORS} from "../state/actions";
+import {useGlobalState} from "../state/state";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -37,14 +39,19 @@ function Register(props) {
             ...form
         }
     });
+    const [{}, dispatch] = useGlobalState();
 
     const handleSubmit = (event) => {
         event.preventDefault();
         register().then((res) => {
             if (res.error) {
-                //Loop through res.error.GraphQLErrors
-                console.log("ERROR:");
-                console.log(res);
+                if (res.error) {
+                    dispatch({
+                        type: ADD_ERRORS,
+                        errors: res.error
+                    });
+                    return;
+                }
                 return;
             }
             const cookies = new Cookie();

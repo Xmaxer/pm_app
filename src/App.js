@@ -15,6 +15,7 @@ import {ClientContext, GraphQLClient} from 'graphql-hooks'
 import Company from "./pages/Company";
 import TestPage from "./pages/TestPage";
 import Asset from "./pages/Asset";
+import Error from "./components/Error";
 
 const cookies = new Cookies();
 
@@ -35,17 +36,22 @@ function App() {
             <ThemeProvider theme={theme}>
                 <StateProvider initialState={initialState} reducer={rootReducer}>
                     <BrowserRouter>
-                        <Switch>
-                            <ProtectedRoute path={"/dashboard"} component={Home} exact/>
-                            <ProtectedRoute path={"/dashboard/company/:company_id"} component={Company} exact/>
-                            <ProtectedRoute path={"/dashboard/company/:company_id/asset/:asset_id"} component={Asset}
-                                            exact/>
-                            <UnProtectedRoute path={"/login"} component={Login} exact/>
-                            <Route path={"/testing"} component={TestPage}/>
-                            <UnProtectedRoute path={"/register"} component={Register}/>
-                            <Redirect from={"/"} to={"/dashboard"}/>
-                            <Route path={"*"} component={() => "404"}/>
-                        </Switch>
+                        <>
+
+                            <Switch>
+                                <ProtectedRoute path={"/dashboard"} component={Home} exact/>
+                                <ProtectedRoute path={"/dashboard/company/:company_id"} component={Company} exact/>
+                                <ProtectedRoute path={"/dashboard/company/:company_id/asset/:asset_id"}
+                                                component={Asset}
+                                                exact/>
+                                <UnProtectedRoute path={"/login"} component={Login} exact/>
+                                <Route path={"/testing"} component={TestPage}/>
+                                <UnProtectedRoute path={"/register"} component={Register}/>
+                                <Redirect from={"/"} to={"/dashboard"}/>
+                                <Route path={"*"} component={() => "404"}/>
+                            </Switch>
+                            <Error/>
+                        </>
                     </BrowserRouter>
                 </StateProvider>
             </ThemeProvider>

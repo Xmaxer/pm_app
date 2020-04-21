@@ -5,6 +5,8 @@ import {useMutation} from 'graphql-hooks'
 import {LOGIN_MUTATION} from "../assets/queries";
 import Cookie from 'universal-cookie'
 import {Redirect} from 'react-router-dom'
+import {useGlobalState} from "../state/state";
+import {ADD_ERRORS} from "../state/actions";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -29,6 +31,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 function Login(props) {
+    const [{}, dispatch] = useGlobalState();
     const classes = useStyles();
     const [form, setForm] = useState({});
     const [{redirect, url}, setRedirect] = useState({redirect: false, url: null});
@@ -42,7 +45,10 @@ function Login(props) {
         event.preventDefault();
         login().then((res) => {
             if (res.error) {
-                //Loop through res.error.GraphQLErrors
+                dispatch({
+                    type: ADD_ERRORS,
+                    errors: res.error
+                });
                 return;
             }
             const cookies = new Cookie();
