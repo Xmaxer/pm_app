@@ -192,11 +192,45 @@ mutation Role($id: ID!){
 `;
 
 export const ADD_ROLE_TO_USER_MUTATION = `
-mutation Role($company_id: ID!, $user_id: ID!, $role_id: ID!){
-  addRole(input: {companyId: $company_id, userId: $user_id, roleId: $role_id}) {
+mutation Role($company_id: ID!, $user_id: ID!, $role_ids: [ID!]!){
+  addRole(input: {companyId: $company_id, userId: $user_id, roleIds: $role_ids}) {
     success
+    user {
+      firstName
+      lastName
+      id
+      roles {
+        id
+        name
+        colour
+      }
+    }
   }
 }
 `;
 
+export const REMOVE_ROLE_FROM_USER_MUTATION = `
+mutation Role($company_id: ID!, $user_id: ID!, $role_ids: [ID!]!){
+  removeRole (input: {companyId: $company_id, userId: $user_id, roleIds: $role_ids}) {
+    success
+    user {
+      roles {
+        id
+        name
+        colour
+      }
+    }
+  }
+}
+`;
+
+export const GET_USERS_QUERY = `
+query User($contains: String, $ignore: [Int!]){
+  users(filter: {nameContains: $contains}, ignoreUsers: $ignore) {
+    id
+    lastName
+    firstName
+  }
+}
+`;
 

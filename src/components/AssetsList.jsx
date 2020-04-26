@@ -25,7 +25,8 @@ const useStyles = makeStyles(theme => ({
         marginRight: 'auto',
         '& > *': {
             marginTop: 20
-        }
+        },
+        padding: '20px'
     }
 }));
 
