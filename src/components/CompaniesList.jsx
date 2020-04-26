@@ -10,6 +10,8 @@ import {Button, IconButton, TextField} from '@material-ui/core'
 import {Formik} from 'formik';
 import AddIcon from '@material-ui/icons/Add';
 import BarChartIcon from '@material-ui/icons/BarChart';
+import {useGlobalState} from "../state/state";
+import {ADD_ERRORS} from "../state/actions";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -32,7 +34,7 @@ function CompaniesList() {
 
     const [renderForm, setRenderForm] = useState(false);
     const [companies, setCompanies] = useState([]);
-
+    const [{}, dispatch] = useGlobalState();
     const [getCompanies, {loading, error}] = useManualQuery(COMPANIES_QUERY, {
         variables: {
             first: 10
@@ -112,6 +114,12 @@ function CompaniesList() {
                         }).then((res) => {
                             if (res.data.company)
                                 addCompany(res.data.company.company);
+                            else {
+                                dispatch({
+                                    type: ADD_ERRORS,
+                                    errors: res.error
+                                })
+                            }
                             setSubmitting(false)
                         });
                     }}>

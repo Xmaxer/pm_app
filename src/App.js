@@ -16,6 +16,7 @@ import Company from "./pages/Company";
 import TestPage from "./pages/TestPage";
 import Asset from "./pages/Asset";
 import Error from "./components/Error";
+import InformationSnackbar from "./components/InformationSnackbar";
 
 const cookies = new Cookies();
 
@@ -51,6 +52,7 @@ function App() {
                                 <Route path={"*"} component={() => "404"}/>
                             </Switch>
                             <Error/>
+                            <InformationSnackbar/>
                         </>
                     </BrowserRouter>
                 </StateProvider>

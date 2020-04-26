@@ -10,6 +10,8 @@ import {Button, IconButton, TextField} from '@material-ui/core'
 import AddIcon from '@material-ui/icons/Add';
 import {Formik} from 'formik';
 import BarChartIcon from '@material-ui/icons/BarChart';
+import {ADD_ERRORS} from "../state/actions";
+import {useGlobalState} from "../state/state";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -33,6 +35,7 @@ function AssetsList({company_id}) {
     const [renderForm, setRenderForm] = useState(false);
     const [assets, setAssets] = useState([]);
     const [dashboardUrl, setDashboardUrl] = useState(null);
+    const [{}, dispatch] = useGlobalState();
 
     const [getAssets, {loading, error}] = useManualQuery(COMPANY_ASSETS_QUERY, {
         variables: {
@@ -52,9 +55,10 @@ function AssetsList({company_id}) {
 
     useEffect(() => {
         getAssets().then((res) => {
-            if (!res.error)
+            if (!res.error && res.data.company) {
                 setAssets(res.data.company.assets);
-            setDashboardUrl(res.data.company.dashboardUrl)
+                setDashboardUrl(res.data.company.dashboardUrl)
+            }
         })
     }, []);
 
@@ -114,6 +118,12 @@ function AssetsList({company_id}) {
                         }).then((res) => {
                             if (res.data.asset)
                                 addAsset(res.data.asset.asset);
+                            else {
+                                dispatch({
+                                    type: ADD_ERRORS,
+                                    errors: res.error
+                                });
+                            }
                             setSubmitting(false)
                         });
                     }}>

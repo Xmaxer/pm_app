@@ -15,14 +15,14 @@ function Error() {
     };
     return (
         <>
-            <Snackbar open={errors.fetchError} onClose={onClose} autoHideDuration={5000}>
+            <Snackbar open={errors.fetchError} onClose={onClose} autoHideDuration={5000} severity={"error"}>
                 <SnackbarContent message={errors.fetchError ? errors.fetchError.message : ""}/>
             </Snackbar>
-            <Snackbar open={errors.graphQLErrors} onClose={onClose} autoHideDuration={5000}>
+            <Snackbar open={errors.graphQLErrors} onClose={onClose} autoHideDuration={5000} severity={"error"}>
                 <SnackbarContent
                     message={errors.graphQLErrors ? errors.graphQLErrors.map((m) => m.message + "\n") : ""}/>
             </Snackbar>
-            <Snackbar open={errors.httpError} onClose={onClose} autoHideDuration={5000}>
+            <Snackbar open={errors.httpError} onClose={onClose} autoHideDuration={5000} severity={"error"}>
                 <SnackbarContent message={errors.httpError ? errors.httpError.statusText : ""}/>
             </Snackbar>
         </>

@@ -19,7 +19,9 @@
     "apollo-upload-client": "12.1.0",
     "formik": "2.1.4",
     "material-ui-dropzone": "2.4.8",
-    "line-navigator": "2.1.6"
+    "line-navigator": "2.1.6",
+    "react-color": "2.18.0",
+    "react-transition-group": "4.3.0"
   },
   "devDependencies": {
     "cross-env": "7.0.0"

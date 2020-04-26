@@ -149,7 +149,54 @@ mutation ApiKey($id: ID!){
     }
   }
 }
-
-
 `;
+
+export const COMPANY_ROLES_QUERY = `
+query Company($company_id: ID!){
+ \tcompany(companyId: $company_id) {
+    id
+    name
+    roles{
+      id
+      name
+      colour
+      numberOfUsers
+    }
+  }
+}
+`;
+
+export const CREATE_COMPANY_ROLE_MUTATION = `
+mutation Role($name: String, $colour: String, $id: ID, $company_id: ID!){
+  role(input: {roleDetails: {name: $name, colour: $colour companyId: $company_id, id: $id}}) {
+    role {
+      numberOfUsers
+      id
+      name
+      colour
+    }
+  }
+}
+`;
+
+export const DELETE_COMPANY_ROLE_MUTATION = `
+mutation Role($id: ID!){
+  deleteRole(input: {id: $id}) {
+\trole {
+    id
+    name
+    numberOfUsers
+  }
+  }
+}
+`;
+
+export const ADD_ROLE_TO_USER_MUTATION = `
+mutation Role($company_id: ID!, $user_id: ID!, $role_id: ID!){
+  addRole(input: {companyId: $company_id, userId: $user_id, roleId: $role_id}) {
+    success
+  }
+}
+`;
+
 
