@@ -68,7 +68,7 @@ function SideBar(props) {
             icon: <DashboardIcon/>
         },
         {
-            link: '/companies',
+            link: '/dashboard/companies',
             title: 'My Companies',
             icon: <CompaniesIcon/>
         },

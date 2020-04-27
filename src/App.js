@@ -17,6 +17,8 @@ import TestPage from "./pages/TestPage";
 import Asset from "./pages/Asset";
 import Error from "./components/Error";
 import InformationSnackbar from "./components/InformationSnackbar";
+import Companies from "./pages/Companies";
+import ApiKeys from "./pages/ApiKeys";
 
 const cookies = new Cookies();
 
@@ -41,6 +43,8 @@ function App() {
 
                             <Switch>
                                 <ProtectedRoute path={"/dashboard"} component={Home} exact/>
+                                <ProtectedRoute path={"/dashboard/companies"} component={Companies} exact/>
+                                <ProtectedRoute path={"/dashboard/api-settings"} component={ApiKeys} exact/>
                                 <ProtectedRoute path={"/dashboard/company/:company_id"} component={Company} exact/>
                                 <ProtectedRoute path={"/dashboard/company/:company_id/asset/:asset_id"}
                                                 component={Asset}
