@@ -54,7 +54,8 @@ function RoleSelect({company_id, setFieldValue, defaultValues, updateHandler}) {
                       renderTags={(value, getTagProps) => {
                           return value.map((option, index) => {
                               return <Chip variant={"outlined"} label={option.name ? option.name : "Owner"}
-                                           style={{backgroundColor: option.colour}} {...getTagProps({index})}/>
+                                           style={{backgroundColor: option.colour}} {...getTagProps({index})}
+                                           disabled={option.name === null}/>
                           })
                       }}
                       multiple={true}

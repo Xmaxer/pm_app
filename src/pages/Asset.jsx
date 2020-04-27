@@ -30,6 +30,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import LabelIcon from '@material-ui/icons/Label';
 import FeatureIcon from '@material-ui/icons/AccountTree';
 import EditIcon from '@material-ui/icons/Edit';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(theme => ({
     content: {
@@ -292,7 +293,9 @@ function Asset() {
                         id={'upload-input'}
                     />
                     <label htmlFor={'upload-input'}>
-                        <IconButton component={'span'}><FolderOpenIcon/></IconButton>
+                        <Tooltip title={"Open file"}>
+                            <IconButton component={'span'}><FolderOpenIcon/></IconButton>
+                        </Tooltip>
                     </label>
                 </div>
                 <DropzoneArea acceptedFiles={accept}

@@ -29,6 +29,25 @@ const theme = createMuiTheme({
                 backgroundColor: generatedPalette.palette.secondary.main
             }
         }
+    },
+    overrides: {
+        MuiTextField: {
+            root: {
+                color: generatedPalette.palette.tertiary.main,
+                '& .MuiInput-underline:after': {
+                    borderBottomColor: generatedPalette.palette.tertiary.main
+                },
+                '& .MuiInput-underline:before': {
+                    borderBottomColor: 'lightgray'
+                },
+                '& .MuiInput-root': {
+                    color: generatedPalette.palette.tertiary.main,
+                },
+                '& label.Mui-focused': {
+                    color: generatedPalette.palette.tertiary.main,
+                },
+            }
+        }
     }
 });
 

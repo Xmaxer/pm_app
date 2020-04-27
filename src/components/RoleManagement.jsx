@@ -17,6 +17,7 @@ import {useGlobalState} from "../state/state";
 import {SUCCESS} from "../assets/severities";
 import {SketchPicker} from 'react-color'
 import {Formik} from 'formik';
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(theme => ({
     appBar: {
@@ -158,9 +159,11 @@ function RoleManagement({open, company_id, closeHandler}) {
         <Dialog fullScreen={true} open={open} TransitionComponent={Transition} onClose={closeHandler}>
             <AppBar className={classes.appBar}>
                 <Toolbar>
-                    <IconButton onClick={closeHandler}>
-                        <CloseIcon/>
-                    </IconButton>
+                    <Tooltip title={"Close"}>
+                        <IconButton onClick={closeHandler}>
+                            <CloseIcon/>
+                        </IconButton>
+                    </Tooltip>
                     <Typography variant={'h6'}>{"Role Management for company " + companyName}</Typography>
                 </Toolbar>
             </AppBar>
@@ -197,11 +200,13 @@ function RoleManagement({open, company_id, closeHandler}) {
                                 </StyledTableCell>
                                 <StyledTableCell>{role.numberOfUsers}</StyledTableCell>
                                 <StyledTableCell>
-                                    <StyledIconButton onClick={() => {
-                                        handleDelete(role.id)
-                                    }} disabled={role.name === null}>
-                                        <DeleteIcon/>
-                                    </StyledIconButton>
+                                    <Tooltip title={"Delete"}>
+                                        <StyledIconButton onClick={() => {
+                                            handleDelete(role.id)
+                                        }} disabled={role.name === null}>
+                                            <DeleteIcon/>
+                                        </StyledIconButton>
+                                    </Tooltip>
                                 </StyledTableCell>
                             </StyledTableRow>
                         })
@@ -209,7 +214,6 @@ function RoleManagement({open, company_id, closeHandler}) {
                 </TableBody>
             </Table>
             <Formik initialValues={{name: '', colour: '#ffffff'}} onSubmit={(values, {setSubmitting, resetForm}) => {
-                console.log(values);
                 updateRole({
                     variables: {
                         ...values,

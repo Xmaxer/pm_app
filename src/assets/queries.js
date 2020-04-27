@@ -20,6 +20,8 @@ export const COMPANIES_QUERY = `query Companies($first: Int, $skip: Int, $order:
     numberOfAssets
     dashboardUrl
     totalSize
+    grafanaUsername
+    grafanaPassword
   }
 }
 `;
@@ -54,6 +56,8 @@ export const COMPANY_ASSETS_QUERY = `query Company($companyId: ID!){
       algorithm
     }
     dashboardUrl
+    grafanaUsername
+    grafanaPassword
   }
 }
 `;
@@ -210,8 +214,8 @@ mutation Role($company_id: ID!, $user_id: ID!, $role_ids: [ID!]!){
 `;
 
 export const REMOVE_ROLE_FROM_USER_MUTATION = `
-mutation Role($company_id: ID!, $user_id: ID!, $role_ids: [ID!]!){
-  removeRole (input: {companyId: $company_id, userId: $user_id, roleIds: $role_ids}) {
+mutation Role($company_id: ID!, $user_id: ID!, $role_ids: [ID!], $purge: Boolean){
+  removeRole (input: {companyId: $company_id, userId: $user_id, roleIds: $role_ids, purge: $purge}) {
     success
     user {
       roles {
@@ -230,6 +234,60 @@ query User($contains: String, $ignore: [Int!]){
     id
     lastName
     firstName
+  }
+}
+`;
+
+export const UPDATE_USER_MUTATION = `
+mutation User($first_name: String, $last_name: String, $password: String!, $new_password: String, $phone_number: String, $enabled: Boolean, $email: String){
+  user (input: {userDetails: {firstName: $first_name, lastName: $last_name, password: $password, newPassword: $new_password, phoneNumber: $phone_number, enabled: $enabled, email: $email}}){
+    user {
+      id
+      firstName
+      lastName
+      phoneNumber
+      email
+    }
+  }
+}
+`;
+
+export const GET_USER_QUERY = `
+query User($id: ID){
+  user(id: $id) {
+    id
+    firstName
+    lastName
+    phoneNumber
+    email
+  }
+}
+`;
+
+export const UPDATE_API_KEY_MUTATION = `
+mutation ApiKey($name: String!, $company_id: ID!, $id: ID){
+  apiKey(input: {apiKeyDetails: {name: $name, companyId: $company_id, id: $id}}){
+    apiKey {
+      id
+      name
+      companyName
+      apiKey
+      lastUsed
+    }
+  }
+}
+`;
+
+export const API_KEY_QUERY = `
+query Key($id: ID!){
+  apiKey(id: $id) {
+    id
+    name
+    history {
+      id
+      query
+      createdAt
+    }
   }
 }
 `;

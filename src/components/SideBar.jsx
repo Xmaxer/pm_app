@@ -1,15 +1,17 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
-import {Divider, Drawer, List, ListItem, ListItemIcon, ListItemText, Typography} from '@material-ui/core';
+import {Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Typography} from '@material-ui/core';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import CompaniesIcon from '@material-ui/icons/Business';
 import APIIcon from '@material-ui/icons/SettingsInputHdmi';
-import SettingsIcon from '@material-ui/icons/Tune';
 import LogoutIcon from '@material-ui/icons/ExitToApp';
 import {useMutation} from 'graphql-hooks'
 import {LOGOUT_MUTATION} from "../assets/queries";
 import {Redirect} from 'react-router-dom'
 import {paths} from "../assets/paths";
+import Settings from '@material-ui/icons/Settings';
+import AccountSettings from "./AccountSettings";
+import Tooltip from '@material-ui/core/Tooltip';
 
 const drawerWidth = 300;
 
@@ -45,7 +47,8 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         justifyContent: 'space-around',
         padding: 10,
-        marginTop: 'auto'
+        marginTop: 'auto',
+        alignItems: 'center'
     },
     icon: {
         color: theme.palette.tertiary.main
@@ -54,6 +57,7 @@ const useStyles = makeStyles(theme => ({
 
 function SideBar(props) {
     const classes = useStyles();
+    const [openUserSettings, setOpenUserSettings] = useState(false);
     const [logout, {loading, error, data}] = useMutation(LOGOUT_MUTATION);
     const title = paths[props.location.pathname] ? paths[props.location.pathname] : "PM";
 
@@ -69,14 +73,9 @@ function SideBar(props) {
             icon: <CompaniesIcon/>
         },
         {
-            link: '/api-settings',
+            link: '/dashboard/api-settings',
             title: 'API Settings',
             icon: <APIIcon/>
-        },
-        {
-            link: '/user-settings',
-            title: 'Account Settings',
-            icon: <SettingsIcon/>
         },
         {
             title: 'Logout',
@@ -126,6 +125,13 @@ function SideBar(props) {
                     <Typography>About</Typography>
                     <Divider orientation={'vertical'}/>
                     <Typography>Contact</Typography>
+                    <Divider orientation={'vertical'}/>
+                    <Tooltip title={"User Settings"}>
+                        <IconButton className={classes.icon} onClick={() => setOpenUserSettings(true)}>
+                            <Settings/>
+                        </IconButton>
+                    </Tooltip>
+                    <AccountSettings open={openUserSettings} closeHandler={() => setOpenUserSettings(false)}/>
                 </div>
             </Drawer>
         </>

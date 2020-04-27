@@ -4,7 +4,6 @@ import {Button, IconButton} from '@material-ui/core'
 import {useManualQuery, useMutation} from 'graphql-hooks'
 import {ADD_ROLE_TO_USER_MUTATION, COMPANY_USERS_QUERY, REMOVE_ROLE_FROM_USER_MUTATION} from "../assets/queries";
 import DeleteIcon from '@material-ui/icons/Delete';
-import SettingsIcon from '@material-ui/icons/Build';
 import {StyledIconButton, StyledTableCell, StyledTableRow} from "../assets/styledElements";
 import GenericList from "./GenericList";
 import {ADD_ERRORS, SET_INFO} from "../state/actions";
@@ -14,6 +13,7 @@ import {useGlobalState} from "../state/state";
 import UserSelect from "./UserSelect";
 import RoleSelect from "./RoleSelect";
 import {SUCCESS} from "../assets/severities";
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -61,8 +61,21 @@ function UsersList({company_id}) {
         })
     }, []);
 
-    const handleRemoveAllRoles = () => {
-
+    const handleRemoveAllRoles = (user_id) => {
+        removeUserRole({variables: {purge: true, company_id: company_id, user_id: user_id}}).then((res) => {
+            if (!res.error && res.data.removeRole && res.data.removeRole.success) {
+                dispatch({
+                    type: SET_INFO,
+                    info: {type: SUCCESS, message: "Removed user"}
+                });
+                setUsers(users.filter((user) => user.id !== user_id))
+            } else {
+                dispatch({
+                    type: ADD_ERRORS,
+                    errors: res.error
+                })
+            }
+        })
     };
 
     const handleUpdateRoles = (roles, oldRoles, user_id) => {
@@ -118,14 +131,13 @@ function UsersList({company_id}) {
             <StyledTableCell><RoleSelect company_id={company_id} defaultValues={row.roles}
                                          updateHandler={(newVal, oldVal) => handleUpdateRoles(newVal, oldVal, row.id)}/></StyledTableCell>
             <StyledTableCell>
-                <StyledIconButton onClick={() => {
-                    handleRemoveAllRoles(row.id)
-                }}>
-                    <DeleteIcon/>
-                </StyledIconButton>
-                <StyledIconButton href={'/dashboard/company/' + company_id + "/user/" + row.id}>
-                    <SettingsIcon/>
-                </StyledIconButton>
+                <Tooltip title={"Remove from company"}>
+                    <StyledIconButton onClick={() => {
+                        handleRemoveAllRoles(row.id)
+                    }}>
+                        <DeleteIcon/>
+                    </StyledIconButton>
+                </Tooltip>
             </StyledTableCell>
 
         </StyledTableRow>
@@ -169,11 +181,11 @@ function UsersList({company_id}) {
                                 </form>
                             )
                         }
-                    </Formik> : <IconButton
+                    </Formik> : <Tooltip title={"Add"}><IconButton
                         style={{width: '100%', backgroundColor: 'transparent'}} disableRipple={true}
                         disableFocusRipple={true} onClick={() => {
                         setRenderForm(true)
-                    }}><AddIcon/></IconButton>
+                    }}><AddIcon/></IconButton></Tooltip>
             }
         </div>
     );

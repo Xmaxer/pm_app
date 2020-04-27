@@ -12,6 +12,12 @@ import AddIcon from '@material-ui/icons/Add';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import {useGlobalState} from "../state/state";
 import {ADD_ERRORS} from "../state/actions";
+import Tooltip from '@material-ui/core/Tooltip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -32,10 +38,10 @@ const useStyles = makeStyles(theme => ({
 
 function CompaniesList() {
     const classes = useStyles();
-
     const [renderForm, setRenderForm] = useState(false);
     const [companies, setCompanies] = useState([]);
     const [{}, dispatch] = useGlobalState();
+    const [openGrafanaDialog, setOpenGrafanaDialog] = useState(null);
     const [getCompanies, {loading, error}] = useManualQuery(COMPANIES_QUERY, {
         variables: {
             first: 10
@@ -53,7 +59,10 @@ function CompaniesList() {
 
     useEffect(() => {
         getCompanies().then((res) => {
-            setCompanies(res.data.companies)
+            if (!res.error && res.data) {
+                setCompanies(res.data.companies)
+            }
+
         })
     }, []);
 
@@ -82,18 +91,27 @@ function CompaniesList() {
             <StyledTableCell>{row.dashboardUrl}</StyledTableCell>
             <StyledTableCell>{(row.totalSize / 1000000) + " MB"}</StyledTableCell>
             <StyledTableCell>
-                <StyledIconButton onClick={() => {
-                    handleDelete(row.id)
-                }}>
-                    <DeleteIcon/>
-                </StyledIconButton>
-                <StyledIconButton href={'/dashboard/company/' + row.id}>
-                    <SettingsIcon/>
-                </StyledIconButton>
-                <StyledIconButton href={"http://192.168.79.129:3000" + row.dashboardUrl}
-                                  disabled={row.dashboardUrl === null} target={"_blank"}>
-                    <BarChartIcon/>
-                </StyledIconButton>
+                <Tooltip title={"Delete"}>
+                    <StyledIconButton onClick={() => {
+                        handleDelete(row.id)
+                    }}>
+                        <DeleteIcon/>
+                    </StyledIconButton>
+                </Tooltip>
+                <Tooltip title={"Details"}>
+                    <StyledIconButton href={'/dashboard/company/' + row.id}>
+                        <SettingsIcon/>
+                    </StyledIconButton>
+                </Tooltip>
+                <Tooltip title={"Grafana Dashboard"}>
+                    <StyledIconButton disabled={row.dashboardUrl === null} onClick={() => setOpenGrafanaDialog({
+                        url: "http://192.168.79.129:3000" + row.dashboardUrl,
+                        password: row.grafanaPassword,
+                        username: row.grafanaUsername
+                    })}>
+                        <BarChartIcon/>
+                    </StyledIconButton>
+                </Tooltip>
             </StyledTableCell>
 
         </StyledTableRow>
@@ -101,6 +119,31 @@ function CompaniesList() {
 
     return (
         <div className={classes.container}>
+            {
+                openGrafanaDialog &&
+                <Dialog open={openGrafanaDialog !== null} onClose={() => setOpenGrafanaDialog(null)}>
+                    <DialogTitle>{"Redirect to Grafana"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {"Credentials: "}
+                            <br/>
+                            {"Username: " + openGrafanaDialog.username}
+                            <br/>
+                            {"Password: " + openGrafanaDialog.password}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button color={'secondary'} onClick={() => setOpenGrafanaDialog(null)}>
+                            Cancel
+                        </Button>
+                        <Button autofocus color={'primary'} onClick={() => setOpenGrafanaDialog(null)}
+                                href={openGrafanaDialog.url} target={"_blank"}>
+                            Open
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            }
+
             <GenericList
                 headers={["Company Name", "Description", "Number of Assets", "Dashboard URL", "Data", "Actions"]}
                 rows={rows}
@@ -145,11 +188,11 @@ function CompaniesList() {
                                 </form>
                             )
                         }
-                    </Formik> : <IconButton
+                    </Formik> : <Tooltip title={"Add"}><IconButton
                         style={{width: '100%', backgroundColor: 'transparent'}} disableRipple={true}
                         disableFocusRipple={true} onClick={() => {
                         setRenderForm(true)
-                    }}><AddIcon/></IconButton>
+                    }}><AddIcon/></IconButton></Tooltip>
             }
         </div>
     );

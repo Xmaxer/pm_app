@@ -12,6 +12,7 @@ import {Formik} from 'formik';
 import BarChartIcon from '@material-ui/icons/BarChart';
 import {ADD_ERRORS} from "../state/actions";
 import {useGlobalState} from "../state/state";
+import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -87,18 +88,25 @@ function AssetsList({company_id}) {
             <StyledTableCell>{(row.files.totalSize / 1000000) + " MB"}</StyledTableCell>
             <StyledTableCell>{row.algorithm}</StyledTableCell>
             <StyledTableCell>
-                <StyledIconButton onClick={() => {
-                    handleDelete(row.id)
-                }}>
-                    <DeleteIcon/>
-                </StyledIconButton>
-                <StyledIconButton href={'/dashboard/company/' + company_id + '/asset/' + row.id}>
-                    <SettingsIcon/>
-                </StyledIconButton>
-                <StyledIconButton href={"http://192.168.79.129:3000" + dashboardUrl} disabled={dashboardUrl === null}
-                                  target={"_blank"}>
-                    <BarChartIcon/>
-                </StyledIconButton>
+                <Tooltip title={"Delete"}>
+                    <StyledIconButton onClick={() => {
+                        handleDelete(row.id)
+                    }}>
+                        <DeleteIcon/>
+                    </StyledIconButton>
+                </Tooltip>
+                <Tooltip title={"Details"}>
+                    <StyledIconButton href={'/dashboard/company/' + company_id + '/asset/' + row.id}>
+                        <SettingsIcon/>
+                    </StyledIconButton>
+                </Tooltip>
+                <Tooltip title={"Grafana Dashboard"}>
+                    <StyledIconButton href={"http://192.168.79.129:3000" + dashboardUrl}
+                                      disabled={dashboardUrl === null}
+                                      target={"_blank"}>
+                        <BarChartIcon/>
+                    </StyledIconButton>
+                </Tooltip>
             </StyledTableCell>
 
         </StyledTableRow>
@@ -149,11 +157,11 @@ function AssetsList({company_id}) {
                                 </form>
                             )
                         }
-                    </Formik> : <IconButton
+                    </Formik> : <Tooltip title={"Add"}><IconButton
                         style={{width: '100%', backgroundColor: 'transparent'}} disableRipple={true}
                         disableFocusRipple={true} onClick={() => {
                         setRenderForm(true)
-                    }}><AddIcon/></IconButton>
+                    }}><AddIcon/></IconButton></Tooltip>
             }
         </div>
     );
