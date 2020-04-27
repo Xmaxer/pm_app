@@ -209,7 +209,7 @@ function Asset() {
                 separator: separator
             }
         }).then((res) => {
-            setNumberOfFiles(numberOfFiles + 1);
+            setNumberOfFiles(numberOfFiles + files.length);
             setFiles([]);
         })
     };
@@ -299,6 +299,7 @@ function Asset() {
                     </label>
                 </div>
                 <DropzoneArea acceptedFiles={accept}
+                              files={files}
                               onDrop={handleDialogOpen} maxFileSize={5000000000}
                               showPreviewsInDropzone={true}
                               useChipsForPreview={true}

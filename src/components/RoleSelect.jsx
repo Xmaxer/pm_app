@@ -37,10 +37,10 @@ function RoleSelect({company_id, setFieldValue, defaultValues, updateHandler}) {
 
     return (
         <Autocomplete options={roles}
-                      getOptionLabel={(option) => option.name ? option.name : "Owner"}
+                      getOptionLabel={(option) => option.name}
                       renderInput={(params) => <TextField {...params} label={"Search roles"} margin={"normal"}/>}
                       renderOption={(option) => <React.Fragment>
-                          {option.name ? option.name : "Owner"}
+                          {option.name}
                           <div style={{
                               backgroundColor: option.colour,
                               width: "20px",
@@ -53,7 +53,7 @@ function RoleSelect({company_id, setFieldValue, defaultValues, updateHandler}) {
                       </React.Fragment>}
                       renderTags={(value, getTagProps) => {
                           return value.map((option, index) => {
-                              return <Chip variant={"outlined"} label={option.name ? option.name : "Owner"}
+                              return <Chip variant={"outlined"} label={option.name}
                                            style={{backgroundColor: option.colour}} {...getTagProps({index})}
                                            disabled={option.name === null}/>
                           })

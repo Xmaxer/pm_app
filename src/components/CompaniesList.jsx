@@ -86,7 +86,7 @@ function CompaniesList() {
         <StyledTableRow key={row.id}>
 
             <StyledTableCell>{row.name}</StyledTableCell>
-            <StyledTableCell>{row.description}</StyledTableCell>
+            <StyledTableCell>{row.description ? row.description : "No description"}</StyledTableCell>
             <StyledTableCell>{row.numberOfAssets}</StyledTableCell>
             <StyledTableCell>{row.dashboardUrl}</StyledTableCell>
             <StyledTableCell>{(row.totalSize / 1000000) + " MB"}</StyledTableCell>
@@ -156,7 +156,7 @@ function CompaniesList() {
                                 ...values
                             }
                         }).then((res) => {
-                            if (res.data.company)
+                            if (!res.error && res.data && res.data.company)
                                 addCompany(res.data.company.company);
                             else {
                                 dispatch({
@@ -171,12 +171,12 @@ function CompaniesList() {
                             ({values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting}) => (
                                 <form onSubmit={handleSubmit} className={classes.form}>
                                     <TextField type={'text'} required={true}
-                                               placeholder={'Company Name'}
+                                               label={'Company Name'}
                                                style={{width: '100%'}} name={"name"}
                                                onInput={handleChange}
                                                value={values.name} fullWidth={false}/>
                                     <TextField type={'text'} required={false}
-                                               placeholder={'Description'}
+                                               label={'Description'}
                                                style={{width: '100%'}} name={"description"}
                                                onInput={handleChange}
                                                value={values.description}/>

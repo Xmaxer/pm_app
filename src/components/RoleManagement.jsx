@@ -180,7 +180,7 @@ function RoleManagement({open, company_id, closeHandler}) {
                     {
                         roles.map((role) => {
                             return <StyledTableRow>
-                                <StyledTableCell>{role.name === null ? "Owner" : role.name}</StyledTableCell>
+                                <StyledTableCell>{role.name}</StyledTableCell>
                                 <StyledTableCell>
                                     <div style={{backgroundColor: role.colour}} className={classes.swatch}
                                          onClick={() => {
@@ -203,7 +203,7 @@ function RoleManagement({open, company_id, closeHandler}) {
                                     <Tooltip title={"Delete"}>
                                         <StyledIconButton onClick={() => {
                                             handleDelete(role.id)
-                                        }} disabled={role.name === null}>
+                                        }}>
                                             <DeleteIcon/>
                                         </StyledIconButton>
                                     </Tooltip>
@@ -237,7 +237,7 @@ function RoleManagement({open, company_id, closeHandler}) {
                     ({values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting, setFieldValue}) => (
                         <form onSubmit={handleSubmit} className={classes.form}>
                             <TextField type={'text'} required={true}
-                                       placeholder={'Role Name'}
+                                       label={'Role Name'}
                                        style={{width: 'auto'}} name={"name"}
                                        onInput={handleChange}
                                        value={values.name} fullWidth={false}/>

@@ -78,11 +78,11 @@ function Login(props) {
                     </Grid>
 
                     <Grid item xs={12} className={classes.item}>
-                        <TextField type={'email'} required={true} placeholder={'Email'} className={classes.textfield}
+                        <TextField type={'email'} required={true} label={'Email'} className={classes.textfield}
                                    name={"email"} onInput={handleChange}/>
                     </Grid>
                     <Grid item xs={12} className={classes.item}>
-                        <TextField type={'password'} required={true} placeholder={'Password'}
+                        <TextField type={'password'} required={true} label={'Password'}
                                    className={classes.textfield} name={"password"} onInput={handleChange}/>
                     </Grid>
                     <Grid item xs={12}>

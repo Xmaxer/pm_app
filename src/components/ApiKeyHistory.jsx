@@ -86,12 +86,13 @@ function ApiKeyHistory({open, closeHandler, api_key_id}) {
                 </TableHead>
                 <TableBody>
                     {
-                        apiKey && apiKey.history && apiKey.history.map((history) => {
+                        apiKey && apiKey.history && apiKey.history.length > 0 ? apiKey.history.map((history) => {
                             return <StyledTableRow>
                                 <StyledTableCell>{history.createdAt}</StyledTableCell>
-                                <StyledTableCell>{history.query}</StyledTableCell>
+                                <StyledTableCell>{history.query ? history.query : "Unknown"}</StyledTableCell>
                             </StyledTableRow>
-                        })
+                        }) : <StyledTableRow><StyledTableCell colSpan={2}>No data to
+                            show!</StyledTableCell></StyledTableRow>
                     }
                 </TableBody>
             </Table>

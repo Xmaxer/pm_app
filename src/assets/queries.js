@@ -88,6 +88,9 @@ export const COMPANY_MUTATION = `mutation Company($name: String!, $description: 
     description
     numberOfAssets
     dashboardUrl
+    grafanaUsername
+    grafanaPassword
+    totalSize
     }
   }
 }
@@ -99,6 +102,10 @@ export const ASSET_MUTATION = `mutation Asset($name: String!, $description: Stri
       id
       name
       description
+      files {
+        totalSize
+      }
+      algorithm
     }
   }
 }

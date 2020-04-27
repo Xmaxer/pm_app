@@ -84,7 +84,7 @@ function AssetsList({company_id}) {
     let rows = assets.length !== 0 ? assets.map((row) => (
         <StyledTableRow key={row.id}>
             <StyledTableCell>{row.name}</StyledTableCell>
-            <StyledTableCell>{row.description}</StyledTableCell>
+            <StyledTableCell>{row.description ? row.description : "No description"}</StyledTableCell>
             <StyledTableCell>{(row.files.totalSize / 1000000) + " MB"}</StyledTableCell>
             <StyledTableCell>{row.algorithm}</StyledTableCell>
             <StyledTableCell>
@@ -140,12 +140,12 @@ function AssetsList({company_id}) {
                             ({values, errors, touched, handleChange, handleBlur, handleSubmit, isSubmitting}) => (
                                 <form onSubmit={handleSubmit} className={classes.form}>
                                     <TextField type={'text'} required={true}
-                                               placeholder={'Asset Name'}
+                                               label={'Asset Name'}
                                                style={{width: '100%'}} name={"name"}
                                                onInput={handleChange}
                                                value={values.name} fullWidth={false}/>
                                     <TextField type={'text'} required={false}
-                                               placeholder={'Description'}
+                                               label={'Description'}
                                                style={{width: '100%'}} name={"description"}
                                                onInput={handleChange}
                                                value={values.description}/>
