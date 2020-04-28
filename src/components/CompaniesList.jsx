@@ -47,6 +47,7 @@ function CompaniesList() {
             first: 10
         }
     });
+    const [editField, setEditField] = useState(null);
 
     const addCompany = (company) => {
         if (company && company.id) {
@@ -82,11 +83,57 @@ function CompaniesList() {
         })
     };
 
+    const handleOnTextFieldSubmit = (event) => {
+        let company = companies.find((company) => company.id === editField.id);
+        company[editField.field] = event.target.value;
+        console.log(company[editField.field]);
+        const key = event.key;
+        if (key === "Enter" || key === undefined) {
+            updateCompany({
+                variables: {
+                    name: company.name,
+                    description: company.description,
+                    id: company.id
+                }
+            }).then((res) => {
+                if (!res.error && res.data.company && res.data.company.company) {
+                    company = res.data.company.company;
+                    let newCompanies = [];
+                    companies.forEach((c) => {
+                        if (c.id !== company.id) {
+                            newCompanies.push(c)
+                        } else {
+                            newCompanies.push(company)
+                        }
+                    });
+                    setCompanies([...newCompanies])
+                } else {
+                    dispatch({
+                        type: ADD_ERRORS,
+                        errors: res.error
+                    })
+                }
+            });
+            setEditField(null)
+        }
+    };
+
     let rows = companies.length !== 0 ? companies.map((row) => (
         <StyledTableRow key={row.id}>
 
-            <StyledTableCell>{row.name}</StyledTableCell>
-            <StyledTableCell>{row.description ? row.description : "No description"}</StyledTableCell>
+            <StyledTableCell onClick={() => setEditField({field: "name", id: row.id})}>{
+                editField && editField.id === row.id && editField.field === "name" ?
+                    <TextField label={editField.field} defaultValue={row.name} onKeyPress={handleOnTextFieldSubmit}
+                               autoFocus onBlur={handleOnTextFieldSubmit}/> : row.name
+
+            }</StyledTableCell>
+            <StyledTableCell onClick={() => setEditField({
+                field: "description",
+                id: row.id
+            })}>{editField && editField.id === row.id && editField.field === "description" ?
+                <TextField label={editField.field} defaultValue={row.description ? row.description : ""}
+                           onKeyPress={handleOnTextFieldSubmit} autoFocus onBlur={handleOnTextFieldSubmit}/> :
+                row.description ? row.description : "No description"}</StyledTableCell>
             <StyledTableCell>{row.numberOfAssets}</StyledTableCell>
             <StyledTableCell>{row.dashboardUrl}</StyledTableCell>
             <StyledTableCell>{(row.totalSize / 1000000) + " MB"}</StyledTableCell>

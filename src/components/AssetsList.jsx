@@ -44,8 +44,8 @@ function AssetsList({company_id}) {
     const [dashboardUrl, setDashboardUrl] = useState(null);
     const [{}, dispatch] = useGlobalState();
     const [openGrafanaDialog, setOpenGrafanaDialog] = useState(null);
-
-    const [getAssets, {loading, error}] = useManualQuery(COMPANY_ASSETS_QUERY, {
+    const [editField, setEditField] = useState(null);
+    const [getAssets, {loading}] = useManualQuery(COMPANY_ASSETS_QUERY, {
         variables: {
             first: 10,
             companyId: company_id
@@ -89,12 +89,57 @@ function AssetsList({company_id}) {
         })
     };
 
-    if (error) return <h1>Errors</h1>;
+    const handleOnTextFieldSubmit = (event) => {
+        let asset = assets.find((asset) => asset.id === editField.id);
+        asset[editField.field] = event.target.value;
+        const key = event.key;
+        if (key === "Enter" || key === undefined) {
+            updateAsset({
+                variables: {
+                    name: asset.name,
+                    description: asset.description,
+                    companyId: company_id,
+                    id: asset.id
+                }
+            }).then((res) => {
+                if (!res.error && res.data.asset.asset && res.data.asset.asset) {
+                    asset = res.data.asset.asset;
+                    let newAssets = [];
+                    assets.forEach((c) => {
+                        if (c.id !== asset.id) {
+                            newAssets.push(c)
+                        } else {
+                            newAssets.push(asset)
+                        }
+                    });
+                    setAssets([...newAssets])
+                } else {
+                    dispatch({
+                        type: ADD_ERRORS,
+                        errors: res.error
+                    })
+                }
+            });
+            setEditField(null)
+        }
+    };
 
     let rows = assets.length !== 0 ? assets.map((row) => (
         <StyledTableRow key={row.id}>
-            <StyledTableCell>{row.name}</StyledTableCell>
-            <StyledTableCell>{row.description ? row.description : "No description"}</StyledTableCell>
+            <StyledTableCell onClick={() => setEditField({
+                field: "name",
+                id: row.id
+            })}>{editField && editField.id === row.id && editField.field === "name" ?
+                <TextField label={editField.field} defaultValue={row.name} onKeyPress={handleOnTextFieldSubmit}
+                           autoFocus onBlur={handleOnTextFieldSubmit}/> :
+                row.name}</StyledTableCell>
+            <StyledTableCell onClick={() => setEditField({
+                field: "description",
+                id: row.id
+            })}>{editField && editField.id === row.id && editField.field === "description" ?
+                <TextField label={editField.field} defaultValue={row.description ? row.description : ""}
+                           onKeyPress={handleOnTextFieldSubmit} autoFocus
+                           onBlur={handleOnTextFieldSubmit}/> : row.description ? row.description : "No description"}</StyledTableCell>
             <StyledTableCell>{(row.files.totalSize / 1000000) + " MB"}</StyledTableCell>
             <StyledTableCell>{row.algorithm}</StyledTableCell>
             <StyledTableCell>

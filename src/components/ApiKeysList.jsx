@@ -46,6 +46,7 @@ function ApiKeysList() {
     const [apiKeys, setApiKeys] = useState([]);
     const [deleteApiKeyMutation, {loading3}] = useMutation(DELETE_API_KEY_MUTATION);
     const [{}, dispatch] = useGlobalState();
+    const [editField, setEditField] = useState(null);
 
     useEffect(() => {
         getApiKeys().then((res) => {
@@ -74,9 +75,48 @@ function ApiKeysList() {
         }
     };
 
+    const handleOnTextFieldSubmit = (event) => {
+        let apiKey = apiKeys.find((apiKey) => apiKey.id === editField.id);
+        apiKey[editField.field] = event.target.value;
+        const key = event.key;
+        if (key === "Enter" || key === undefined) {
+            updateApiKey({
+                variables: {
+                    name: apiKey.name,
+                    id: apiKey.id
+                }
+            }).then((res) => {
+                if (!res.error && res.data.apiKey && res.data.apiKey.apiKey) {
+                    apiKey = res.data.apiKey.apiKey;
+                    let newApiKeys = [];
+                    apiKeys.forEach((c) => {
+                        if (c.id !== apiKey.id) {
+                            newApiKeys.push(c)
+                        } else {
+                            newApiKeys.push(apiKey)
+                        }
+                    });
+                    setApiKeys([...newApiKeys])
+                } else {
+                    dispatch({
+                        type: ADD_ERRORS,
+                        errors: res.error
+                    })
+                }
+            });
+            setEditField(null)
+        }
+    };
+
     let rows = apiKeys.length !== 0 ? apiKeys.map((row) => (
         <StyledTableRow key={row.id}>
-            <StyledTableCell>{row.name}</StyledTableCell>
+            <StyledTableCell onClick={() => setEditField({
+                field: "name",
+                id: row.id
+            })}>{editField && editField.id === row.id && editField.field === "name" ?
+                <TextField label={editField.field} defaultValue={row.name} onKeyPress={handleOnTextFieldSubmit}
+                           autoFocus onBlur={handleOnTextFieldSubmit}/> :
+                row.name}</StyledTableCell>
             <StyledTableCell>{row.companyName}</StyledTableCell>
             <StyledTableCell>{row.apiKey}</StyledTableCell>
             <StyledTableCell>{row.lastUsed ? row.lastUsed : "Never"}</StyledTableCell>

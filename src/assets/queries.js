@@ -272,7 +272,7 @@ query User($id: ID){
 `;
 
 export const UPDATE_API_KEY_MUTATION = `
-mutation ApiKey($name: String!, $company_id: ID!, $id: ID){
+mutation ApiKey($name: String!, $company_id: ID, $id: ID){
   apiKey(input: {apiKeyDetails: {name: $name, companyId: $company_id, id: $id}}){
     apiKey {
       id
