@@ -133,10 +133,10 @@ function CompaniesList() {
                         </DialogContentText>
                     </DialogContent>
                     <DialogActions>
-                        <Button color={'secondary'} onClick={() => setOpenGrafanaDialog(null)}>
+                        <Button color={'primary'} onClick={() => setOpenGrafanaDialog(null)}>
                             Cancel
                         </Button>
-                        <Button autofocus color={'primary'} onClick={() => setOpenGrafanaDialog(null)}
+                        <Button autofocus color={'secondary'} onClick={() => setOpenGrafanaDialog(null)}
                                 href={openGrafanaDialog.url} target={"_blank"}>
                             Open
                         </Button>

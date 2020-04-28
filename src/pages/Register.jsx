@@ -98,11 +98,11 @@ function Register(props) {
                                    className={classes.textfield} name={"first_name"} onInput={handleChange}/>
                     </Grid>
                     <Grid item xs={12} className={classes.item}>
-                        <TextField type={'text'} required={true} label={'Last name'}
+                        <TextField type={'text'} required={false} label={'Last name'}
                                    className={classes.textfield} name={"last_name"} onInput={handleChange}/>
                     </Grid>
                     <Grid item xs={12} className={classes.item}>
-                        <TextField type={'text'} required={true} label={'Phone number'}
+                        <TextField type={'text'} required={false} label={'Phone number'}
                                    className={classes.textfield} name={"phone_number"} onInput={handleChange}/>
                     </Grid>
                     <Grid item xs={12}>

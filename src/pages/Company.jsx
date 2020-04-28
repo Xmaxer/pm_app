@@ -19,7 +19,8 @@ const useStyles = makeStyles(theme => ({
         flexWrap: 'wrap',
     },
     rolebutton: {
-        color: theme.palette.tertiary.main
+        color: theme.palette.tertiary.main,
+        height: '50px'
     }
 }));
 

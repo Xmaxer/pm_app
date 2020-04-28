@@ -13,6 +13,11 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import {ADD_ERRORS} from "../state/actions";
 import {useGlobalState} from "../state/state";
 import Tooltip from '@material-ui/core/Tooltip';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -38,6 +43,7 @@ function AssetsList({company_id}) {
     const [assets, setAssets] = useState([]);
     const [dashboardUrl, setDashboardUrl] = useState(null);
     const [{}, dispatch] = useGlobalState();
+    const [openGrafanaDialog, setOpenGrafanaDialog] = useState(null);
 
     const [getAssets, {loading, error}] = useManualQuery(COMPANY_ASSETS_QUERY, {
         variables: {
@@ -59,7 +65,11 @@ function AssetsList({company_id}) {
         getAssets().then((res) => {
             if (!res.error && res.data.company) {
                 setAssets(res.data.company.assets);
-                setDashboardUrl(res.data.company.dashboardUrl)
+                setDashboardUrl({
+                    url: res.data.company.dashboardUrl,
+                    username: res.data.company.grafanaUsername,
+                    password: res.data.company.grafanaPassword
+                })
             }
         })
     }, []);
@@ -101,9 +111,11 @@ function AssetsList({company_id}) {
                     </StyledIconButton>
                 </Tooltip>
                 <Tooltip title={"Grafana Dashboard"}>
-                    <StyledIconButton href={"http://192.168.79.129:3000" + dashboardUrl}
-                                      disabled={dashboardUrl === null}
-                                      target={"_blank"}>
+                    <StyledIconButton disabled={dashboardUrl === null} onClick={() => setOpenGrafanaDialog({
+                        url: "http://192.168.79.129:3000" + dashboardUrl.url,
+                        password: dashboardUrl.password,
+                        username: dashboardUrl.username
+                    })}>
                         <BarChartIcon/>
                     </StyledIconButton>
                 </Tooltip>
@@ -116,6 +128,30 @@ function AssetsList({company_id}) {
         <div className={classes.container}>
             <GenericList headers={["Name", "Description", "Data Used", "Algorithm", "Actions"]} rows={rows}
                          loading={loading || loading2} title={"Assets"}/>
+            {
+                openGrafanaDialog &&
+                <Dialog open={openGrafanaDialog !== null} onClose={() => setOpenGrafanaDialog(null)}>
+                    <DialogTitle>{"Redirect to Grafana"}</DialogTitle>
+                    <DialogContent>
+                        <DialogContentText>
+                            {"Credentials: "}ro
+                            <br/>
+                            {"Username: " + openGrafanaDialog.username}
+                            <br/>
+                            {"Password: " + openGrafanaDialog.password}
+                        </DialogContentText>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button color={'primary'} onClick={() => setOpenGrafanaDialog(null)}>
+                            Cancel
+                        </Button>
+                        <Button autofocus color={'secondary'} onClick={() => setOpenGrafanaDialog(null)}
+                                href={openGrafanaDialog.url} target={"_blank"}>
+                            Open
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            }
             {
                 renderForm ?
                     <Formik initialValues={{name: '', description: ''}} onSubmit={(values, {setSubmitting}) => {
