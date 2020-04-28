@@ -360,31 +360,38 @@ function Asset() {
                                         previewData.length > 0 && previewData[0].length > 0 && previewData[0][0].map((v, i) => {
                                             return <StyledTableCell>
                                                 <FormGroup>
-                                                    <FormControlLabel control={<Checkbox
-                                                        icon={<DeleteIcon className={classes.optionUnchecked}/>}
-                                                        checkedIcon={<DeleteIcon
-                                                            className={classes.markedForDeletionIcon}/>}
-                                                        value={"remove"} onChange={event => {
-                                                        handleCheck("remove", event.target.checked, i)
-                                                    }}
-                                                        checked={selectedColumns.remove.includes(i)}/>} label={null}
-                                                    />
-                                                    <FormControlLabel control={<Checkbox
-                                                        icon={<LabelIcon className={classes.optionUnchecked}/>}
-                                                        checkedIcon={<LabelIcon
-                                                            className={classes.markedForLabelIcon}/>}
-                                                        value={"labels"} onChange={event => {
-                                                        handleCheck("labels", event.target.checked, i)
-                                                    }} checked={selectedColumns.labels.includes(i)}/>} label={null}
-                                                    />
-                                                    <FormControlLabel control={<Checkbox
-                                                        icon={<FeatureIcon className={classes.optionUnchecked}/>}
-                                                        checkedIcon={<FeatureIcon
-                                                            className={classes.markedForFeatureIcon}/>}
-                                                        value={"features"} onChange={event => {
-                                                        handleCheck("features", event.target.checked, i)
-                                                    }} checked={selectedColumns.features.includes(i)}/>} label={null}
-                                                    />
+                                                    <Tooltip title={"Mark for removal"}>
+                                                        <FormControlLabel control={<Checkbox
+                                                            icon={<DeleteIcon className={classes.optionUnchecked}/>}
+                                                            checkedIcon={<DeleteIcon
+                                                                className={classes.markedForDeletionIcon}/>}
+                                                            value={"remove"} onChange={event => {
+                                                            handleCheck("remove", event.target.checked, i)
+                                                        }}
+                                                            checked={selectedColumns.remove.includes(i)}/>} label={null}
+                                                        />
+                                                    </Tooltip>
+                                                    <Tooltip title={"Mark as label"}>
+                                                        <FormControlLabel control={<Checkbox
+                                                            icon={<LabelIcon className={classes.optionUnchecked}/>}
+                                                            checkedIcon={<LabelIcon
+                                                                className={classes.markedForLabelIcon}/>}
+                                                            value={"labels"} onChange={event => {
+                                                            handleCheck("labels", event.target.checked, i)
+                                                        }} checked={selectedColumns.labels.includes(i)}/>} label={null}
+                                                        />
+                                                    </Tooltip>
+                                                    <Tooltip title={"Mark as feature"}>
+                                                        <FormControlLabel control={<Checkbox
+                                                            icon={<FeatureIcon className={classes.optionUnchecked}/>}
+                                                            checkedIcon={<FeatureIcon
+                                                                className={classes.markedForFeatureIcon}/>}
+                                                            value={"features"} onChange={event => {
+                                                            handleCheck("features", event.target.checked, i)
+                                                        }} checked={selectedColumns.features.includes(i)}/>}
+                                                                          label={null}
+                                                        />
+                                                    </Tooltip>
                                                 </FormGroup>
                                             </StyledTableCell>
                                         })
