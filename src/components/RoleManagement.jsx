@@ -84,6 +84,7 @@ function RoleManagement({open, company_id, closeHandler}) {
     const [deleteRole, {loading2}] = useMutation(DELETE_COMPANY_ROLE_MUTATION);
     const [updateRole, {loading3}] = useMutation(CREATE_COMPANY_ROLE_MUTATION);
     const [{}, dispatch] = useGlobalState();
+    const [editField, setEditField] = useState(null);
 
     useEffect(() => {
         if (open === true) {
@@ -155,6 +156,41 @@ function RoleManagement({open, company_id, closeHandler}) {
         });
         setRoles(newRoles)
     };
+
+    const handleOnTextFieldSubmit = (event) => {
+        let role = roles.find((role) => role.id === editField.id);
+        role[editField.field] = event.target.value;
+        const key = event.key;
+        if (key === "Enter" || key === undefined) {
+            updateRole({
+                variables: {
+                    name: role.name,
+                    company_id: company_id,
+                    id: role.id
+                }
+            }).then((res) => {
+                if (!res.error && res.data.role.role && res.data.role.role) {
+                    role = res.data.role.role;
+                    let newRoles = [];
+                    roles.forEach((c) => {
+                        if (c.id !== role.id) {
+                            newRoles.push(c)
+                        } else {
+                            newRoles.push(role)
+                        }
+                    });
+                    setRoles([...newRoles])
+                } else {
+                    dispatch({
+                        type: ADD_ERRORS,
+                        errors: res.error
+                    })
+                }
+            });
+            setEditField(null)
+        }
+    };
+
     return (
         <Dialog fullScreen={true} open={open} TransitionComponent={Transition} onClose={closeHandler}>
             <AppBar className={classes.appBar}>
@@ -180,7 +216,14 @@ function RoleManagement({open, company_id, closeHandler}) {
                     {
                         roles.map((role) => {
                             return <StyledTableRow>
-                                <StyledTableCell>{role.name}</StyledTableCell>
+                                <StyledTableCell onClick={() => setEditField({
+                                    field: "name",
+                                    id: role.id
+                                })}>{editField && editField.id === role.id && editField.field === "name" ?
+                                    <TextField label={editField.field} defaultValue={role.name}
+                                               onKeyPress={handleOnTextFieldSubmit}
+                                               autoFocus onBlur={handleOnTextFieldSubmit}/> :
+                                    role.name}</StyledTableCell>
                                 <StyledTableCell>
                                     <div style={{backgroundColor: role.colour}} className={classes.swatch}
                                          onClick={() => {
