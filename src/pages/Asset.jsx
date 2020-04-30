@@ -227,7 +227,9 @@ function Asset() {
         else modifying = modifying.filter(value => {
             return value !== column
         });
-
+        modifying.sort((a, b) => {
+            return a - b
+        });
         setSelectedColumns({...selectedColumns, [name]: modifying})
     };
 
