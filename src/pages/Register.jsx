@@ -55,7 +55,7 @@ function Register(props) {
                 return;
             }
             const cookies = new Cookie();
-            cookies.set('token', res.data.register.token);
+            cookies.set('token', res.data.register.token, {path: '/'});
             const old_loc = props.location.state ? props.location.state.from.pathname : null;
 
             setRedirect({redirect: true, url: old_loc})

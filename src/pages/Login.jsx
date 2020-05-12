@@ -52,7 +52,7 @@ function Login(props) {
                 return;
             }
             const cookies = new Cookie();
-            cookies.set('token', res.data.login.token);
+            cookies.set('token', res.data.login.token, {path: '/'});
             const old_loc = props.location.state ? props.location.state.from.pathname : null;
 
             setRedirect({redirect: true, url: old_loc})
